@@ -24,6 +24,14 @@ class MyModule final : public Module
 {
 public:
     explicit MyModule(ContextPtr context);
+
+    DictPtr<IString, IFunctionBlockType> onGetAvailableFunctionBlockTypes() override;
+    FunctionBlockPtr onCreateFunctionBlock(const StringPtr& id,
+                                           const ComponentPtr& parent,
+                                           const StringPtr& localId,
+                                           const PropertyObjectPtr& config) override;
+
+private:
 };
 
 END_NAMESPACE_MY_MODULE
