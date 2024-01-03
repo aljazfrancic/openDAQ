@@ -1,0 +1,25 @@
+https://docs.opendaq.com/manual/opendaq/2.0.0/getting_started/quick_start_building_opendaq.html
+cmake --install . --prefix "openDAQ"
+doesn't work unless you build inside Visual Studio Debug/Release
+
+https://docs.opendaq.com/manual/opendaq/2.0.0/background_info/modules.html
+is specied as -> is specified
+
+for submission: module folder is not enough as it is not included in cmake???
+
+CMakePresets.json
+	"DAQMODULES_EMPTY_MODULE": true,
+modules/CMakeLists.txt
+	option(DAQMODULES_EMPTY_MODULE "Building of demo module" OFF)
+???
+
+Compatibility with CMake < 3.5 will be removed from a future version of CMake.
+???
+
+assignment text:
+getAvailableFunctionBlocks() == getAvailableFunctionBlockTypes()
+???
+
+openDAQ\examples\cpp\CMakeLists.txt
+OPENDAQ_CONSOLE_APP not used OPENDAQ_EMPTY_EXAMPLE used instead!
+
