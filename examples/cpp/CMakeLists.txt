@@ -14,6 +14,7 @@ option(OPENDAQ_TAIL_READER "Tail reader example that uses manually generated dat
 option(OPENDAQ_READER_BASICS "Reader basics example that uses manually generated data." ON)
 option(OPENDAQ_READER_WITH_TIME_STAMPS "Time Reader example that uses manually generated data." ON)
 option(OPENDAQ_EMPTY_EXAMPLE "Empty example source for user examples." ON)
+option(OPENDAQ_MY_EXAMPLE "My example source for user examples." ON)
 option(OPENDAQ_FUNCTION_BLOCK "Function block example using an averager and renderer" ON)
 option(OPENDAQ_CSV_WRITER "Example that connects to availble devices, writing their data to a .csv file" ON)
 option(OPENDAQ_STREAMING_CONFIG "Streaming configuration example that modifies the configuration of OpcUa enabled device" ON)
@@ -24,6 +25,10 @@ endif()
 
 if (OPENDAQ_EMPTY_EXAMPLE)
   add_subdirectory(empty_example)
+endif()
+
+if (OPENDAQ_MY_EXAMPLE)
+  add_subdirectory(my_example)
 endif()
 
 if (OPENDAQ_CLIENT_DISCOVERY)

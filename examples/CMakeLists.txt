@@ -43,6 +43,9 @@ if (APP_ENABLE_WEBPAGE_EXAMPLES)
     add_executable(empty_example cpp/empty_example/empty_example.cpp)
     target_link_libraries(empty_example daq::opendaq)
 
+    add_executable(my_example cpp/my_example/my_example.cpp)
+    target_link_libraries(my_example daq::opendaq)
+
     add_executable(function_block_example cpp/function_block_example/function_block_example.cpp)
     target_link_libraries(function_block_example PRIVATE daq::opendaq)
     add_dependencies(function_block_example daq::ref_fb_module
