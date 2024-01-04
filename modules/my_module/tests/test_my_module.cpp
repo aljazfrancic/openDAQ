@@ -96,7 +96,7 @@ TEST_F(MyModuleTest, GetAvailableComponentTypes)
 
     DictPtr<IString, IFunctionBlockType> functionBlockTypes;
     ASSERT_NO_THROW(functionBlockTypes = module.getAvailableFunctionBlockTypes());
-    ASSERT_EQ(functionBlockTypes.getCount(), 0u);
+    ASSERT_EQ(functionBlockTypes.getCount(), 1u);
 
     DictPtr<IString, IDeviceType> deviceTypes;
     ASSERT_NO_THROW(deviceTypes = module.getAvailableDeviceTypes());
