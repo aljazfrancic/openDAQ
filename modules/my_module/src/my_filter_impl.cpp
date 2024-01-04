@@ -18,6 +18,8 @@
 #include "opendaq/range_factory.h"
 #include "opendaq/sample_type_traits.h"
 
+#include <iostream>
+
 BEGIN_NAMESPACE_MY_MODULE
 
 namespace My
@@ -33,29 +35,9 @@ namespace My
 
     void MyFilterImpl::initProperties()
     {
-        const auto scaleProp = FloatProperty("Scale", 1.0);
-        objPtr.addProperty(scaleProp);
-        objPtr.getOnPropertyValueWrite("Scale") +=
-            [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
-
-        const auto offsetProp = FloatProperty("Offset", 0.0);
-        objPtr.addProperty(offsetProp);
-        objPtr.getOnPropertyValueWrite("Offset") +=
-            [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
-
-        const auto useCustomOutputRangeProp = BoolProperty("UseCustomOutputRange", False);
-        objPtr.addProperty(useCustomOutputRangeProp);
-        objPtr.getOnPropertyValueWrite("UseCustomOutputRange") +=
-            [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
-
-        const auto customHighValueProp = FloatProperty("OutputHighValue", 10.0, EvalValue("$UseCustomOutputRange"));
-        objPtr.addProperty(customHighValueProp);
-        objPtr.getOnPropertyValueWrite("OutputHighValue") +=
-            [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
-
-        const auto customLowValueProp = FloatProperty("OutputLowValue", -10.0, EvalValue("$UseCustomOutputRange"));
-        objPtr.addProperty(customLowValueProp);
-        objPtr.getOnPropertyValueWrite("OutputLowValue") +=
+        const auto cutoffFrequency = IntProperty("CutoffFrequency", 1);
+        objPtr.addProperty(cutoffFrequency);
+        objPtr.getOnPropertyValueWrite("CutoffFrequency") +=
             [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
 
         const auto outputNameProp = StringProperty("OutputName", "");
@@ -81,18 +63,14 @@ namespace My
 
     void MyFilterImpl::readProperties()
     {
-        scale = objPtr.getPropertyValue("Scale");
-        offset = objPtr.getPropertyValue("Offset");
-        useCustomOutputRange = objPtr.getPropertyValue("UseCustomOutputRange");
-        outputHighValue = objPtr.getPropertyValue("OutputHighValue");
-        outputLowValue = objPtr.getPropertyValue("OutputLowValue");
+        cutoffFrequency = objPtr.getPropertyValue("CutoffFrequency");
         outputUnit = static_cast<std::string>(objPtr.getPropertyValue("OutputUnit"));
         outputName = static_cast<std::string>(objPtr.getPropertyValue("OutputName"));
     }
 
     FunctionBlockTypePtr MyFilterImpl::CreateType()
     {
-        return FunctionBlockType("my_filter", "My Filter", "My signal filter");
+        return FunctionBlockType("my_filter", "My Filter (Butterworth)", "My signal filter (Butterworth)");
     }
 
     void MyFilterImpl::processSignalDescriptorChanged(const DataDescriptorPtr& inputDataDescriptor,
@@ -128,22 +106,11 @@ namespace My
 
             auto outputDataDescriptorBuilder = DataDescriptorBuilder().setSampleType(SampleType::Float64);
 
-            RangePtr outputRange;
-            if (useCustomOutputRange)
-                outputRange = Range(outputLowValue, outputHighValue);
-            else
-            {
-                auto outputHigh = scale * static_cast<Float>(inputDataDescriptor.getValueRange().getLowValue()) + offset;
-                auto outputLow = scale * static_cast<Float>(inputDataDescriptor.getValueRange().getHighValue()) + offset;
-                if (outputLow > outputHigh)
-                    std::swap(outputLow, outputHigh);
-                outputRange = Range(outputLow, outputHigh);
-            }
-
-            outputDataDescriptorBuilder.setValueRange(outputRange);
+            // set output value range to be the same as input value range
+            outputDataDescriptorBuilder.setValueRange(inputDataDescriptor.getValueRange());
 
             if (outputName.empty())
-                outputDataDescriptorBuilder.setName(inputDataDescriptor.getName().toStdString() + "/Scaled");
+                outputDataDescriptorBuilder.setName(inputDataDescriptor.getName().toStdString() + "/ButterworthFiltered");
             else
                 outputDataDescriptorBuilder.setName(outputName);
 
@@ -214,7 +181,8 @@ namespace My
         auto outputData = static_cast<Float*>(outputPacket.getData());
 
         for (size_t i = 0; i < sampleCount; i++)
-            *outputData++ = scale * static_cast<Float>(*inputData++) + offset;
+            *outputData++ = i;  // scale * static_cast<Float>(*inputData++) + offset;
+        std::cout << "SAMPLE COUNT: " << sampleCount << std::endl;
 
         outputSignal.sendPacket(outputPacket);
         outputDomainSignal.sendPacket(packet.getDomainPacket());

@@ -12,6 +12,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     // Create an Instance, loading modules at MODULE_PATH
     const daq::InstancePtr instance = daq::Instance(MODULE_PATH);
 
+    // Print modules and their function blocks
     std::cout << "modules and their function blocks:" << std::endl;
 
     auto modules = instance.getModuleManager().getModules();
@@ -27,9 +28,8 @@ int main(int /*argc*/, const char* /*argv*/[])
         }
     }
 
-    std::cout << "devices:" << std::endl;
-
     // Discover and print the names and connection strings of openDAQ(TM) devices
+    std::cout << "devices:" << std::endl;
     daq::ListPtr<daq::IDeviceInfo> availableDevicesInfo = instance.getAvailableDevices();
     for (const auto& deviceInfo : availableDevicesInfo)
         std::cout << "Name: " << deviceInfo.getName() << ", Address: " << deviceInfo.getConnectionString() << std::endl;
@@ -41,7 +41,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     auto my_filter = instance.addFunctionBlock("my_filter");
     auto renderer = instance.addFunctionBlock("ref_fb_module_renderer");
 
-    // Set renderer to draw 1 s of data
+    // Set renderer to draw 2 s of data
     renderer.setPropertyValue("Duration", 2);
 
     // Get channel and signal of reference device
@@ -53,8 +53,8 @@ int main(int /*argc*/, const char* /*argv*/[])
     sineChannel.setPropertyValue("Frequency", 1);
 
     // Set my filter properies
-    my_filter.setPropertyValue("Scale", 2);
-    my_filter.setPropertyValue("Offset", 5);
+    my_filter.setPropertyValue("CutoffFrequency", 2);
+    // my_filter.setPropertyValue("Offset", 5);
 
     // Connect the signals to the renderer and my filter
     my_filter.getInputPorts()[0].connect(sineSignal);

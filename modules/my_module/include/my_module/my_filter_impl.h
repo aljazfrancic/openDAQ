@@ -51,12 +51,7 @@ namespace My
         SignalConfigPtr outputSignal;
         SignalConfigPtr outputDomainSignal;
 
-        // not needed???
-        Float scale;
-        Float offset;
-        Float outputHighValue;
-        Float outputLowValue;
-        Bool useCustomOutputRange;
+        Int cutoffFrequency;
         std::string outputUnit;
         std::string outputName;
 
