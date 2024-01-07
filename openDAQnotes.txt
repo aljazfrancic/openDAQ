@@ -1,31 +1,116 @@
+Lep pozdrav,
+
+pripravil sem svojo rešitev, ki je na voljo tukaj:
+https://github.com/aljazfrancic/openDAQ/tree/assignment
+
+Svoja opažanja in vprašanja sem zavoljo lažje komunikacije strnil v naslednje točke:
+
+1)
+V dokumenacji:
 https://docs.opendaq.com/manual/opendaq/2.0.0/getting_started/quick_start_building_opendaq.html
+ukaz:
 cmake --install . --prefix "openDAQ"
-doesn't work unless you build inside Visual Studio Debug/Release
+ne deluje, rezen če greš najprej v Visual Studio in buildaš v Release načinu.
+Error, ki ga vrže je naslednji:
+CMake Error at _deps/fmt-build/cmake_install.cmake:78 (file):
+  file INSTALL cannot find
+  "C:/Users/anony/Desktop/openDAQ/build/x64/msvc-22/full/bin/Release/fmt.lib":
+  File exists.
+Call Stack (most recent call first):
+  external/fmt/cmake_install.cmake:37 (include)
+  external/cmake_install.cmake:52 (include)
+  cmake_install.cmake:62 (include)
+(mapa Release ne obstaja, če poženeš vse prejšnje ukaze)
 
+2)
+Našel sem manjšega tiskarsekga škrata v:
 https://docs.opendaq.com/manual/opendaq/2.0.0/background_info/modules.html
-is specied as -> is specified
+is specied as -> is specified as
+Naredim pull request za to?
 
-for submission: module folder is not enough as it is not included in cmake???
+3)
+Za objavno naloge naj bi uporabil Google Drive ali slično, ampak sem pri rešitvi modificiral tudi fajle izven svojega modula (specifično CMakePresets.json in CMakeLists.txt datoteke) zato sem rešitev zapakiral v branch "assignment" v forku, ki je na uvodnem linku.
+Obenem sem v kreiral tudi svojo mapico v examples (my_example), kjer demonstriram delovanje modula my_module, ki vsebuje my_filter_implementation, ki uporablja razred Butterworth.
+Če je bilo mišljeno, da je rešitev privatna, se opravičujem in lahko naredim privatno kopijo repozitorija.
 
+4)
 CMakePresets.json
 	"DAQMODULES_EMPTY_MODULE": true,
 modules/CMakeLists.txt
 	option(DAQMODULES_EMPTY_MODULE "Building of demo module" OFF)
-???
+Ne razumem zakaj je v drugem nastavljeno na OFF? (nisem glih majster za CMake, zato sprašujem)
 
+5)
+Ukaz
+cmake --preset "x64/msvc-22/full"
+meče
 Compatibility with CMake < 3.5 will be removed from a future version of CMake.
+Vidim, da je nastavljena nižja verzija CMake-a. Kako to?
+
+6)
+V dokumentu openDAQ_Evaluation_Task.pdf sem opazil omenjeno funkcijo
+getAvailableFunctionBlocks()
+ki je ne najdem. Predvidevam, da je bila mišljena funkcjia
+getAvailableFunctionBlockTypes()
 ???
 
-assignment text:
-getAvailableFunctionBlocks() == getAvailableFunctionBlockTypes()
-???
-
+7)
+Našel sem napako v datoteki:
 openDAQ\examples\cpp\CMakeLists.txt
-OPENDAQ_CONSOLE_APP not used OPENDAQ_EMPTY_EXAMPLE used instead!
+in sicer:
+OPENDAQ_CONSOLE_APP ni uporabljen, medtem ko je OPENDAQ_EMPTY_EXAMPLE pomotoma uporabljen 2x!
+Sicer ne povzroča težav, ker je oboje enaka vrednost, ampak bi morda veljalo popraviti.
+Naredim pull request?
 
-properties/constructor problem...
+8)
+Nisem prepričan, če sem dovolj elegantno definiral spremenljivke, ki jih upravljamo preko Properties.
+Poleg "CutoffFrequency" sem definiral tudi "FilterOrder" in pa "SamplingFreqency".
+Defaulti so definirani v my_filter_impl.h kot:
+constexpr auto FILTER_ORDER = 4;
+constexpr auto CUTOFF_FREQUENCY = 50;
+constexpr auto SAMPLING_FREQUENCY = 1000;
+(verjetno se bi dalo kako lepše rešit?)
+kar deluje načeloma dobro z mojimi nastavitvami v my_example.cpp
+sineChannel.setPropertyValue("NoiseAmplitude", 0.5);
+sineChannel.setPropertyValue("Frequency", 1);
+kjer sem tudi ugotovil, da je
+DEVICE PROPERTIES:
+GlobalSampleRate: 1000
+Ko pride do spremembe properties na novo kličem konstruktor za Butterworth kot
+void MyFilterImpl::butterworthPropertyChanged()
+{
+    std::scoped_lock lock(sync);  // BUTTERWORTH LOCK???
+    butterworth = Butterworth(order, cutoff, fs);
+}
+Predvidevam, da je ta lock potreben?
 
-input port/signal: data types???
+9)
+Moram priznati tudi, da mi vsa koda za Properties v "my_filter_impl.cpp", ki je narejena po vzoru "scaling_fb_impl.cpp" ni čisto jasna. Sem bolj ali manj sledil temu, kar tam počne, kjer se mi je zdelo smiselno.
 
-std::scoped_lock lock(sync);  // BUTTERWORTH LOCK???
+10)
+Tudi za input ("port) in output ("signal") sem bolj ali manj sledil "my_filter_impl.cpp". Koliko vidim iz primera sprejema kot input vse tipe za skalarje (int in izpeljanke ter float in izpeljanke), kot output pa je nastavljen Float64.
+V openDAQ_Evaluation_Task.pdf je navedeno, da je izhod "synchronous" (a signal with a Domain signal that has a linear implicit rule)" - sem googlal in mi ni čisto jasna terminologija - predvsem besede:
+"synchronous"
+"Domain signal"
+"linear implicit rule"
+predvidevam, da je mišljeno, da sta input in output "sinhronizirana" v smislu, da imata enako vzorčevalno frekvenco in da velikost packeta na "input portu" ustreza velikosti na "signalu"/outputu, da je enaka "delta" (čas med vzorci).
+Mislim, da tako, kot je implementirano, zadošča zahtevam naloge?
+Bi lahko dobil bolj točne razlage za zgorj izpostavljene pojme?
 
+11)
+Izpisi z cout v my_example.cpp se včasih prekrivajo (ker očitno funkcije, ki jih kličem tečejo v svojih threadih in potem izpisujejo v konzolo). Bi se dalo to kako urediti z lockom, da do prekrivanja ne bi prišlo?
+
+12)
+Implementacija
+void MyFilterImpl::processDataPacket(const DataPacketPtr& packet)
+je malo clunky, ker je narejena rešitev z prepisovanjem v vector tip (za uporabo razreda Butterworth) in potem nazaj.
+Verjetno bi se dalo elegantneje rešiti, ampak načeloma deluje v tej obliki.
+
+13)
+Rešitev predvideva tudi, da je velikost input data vectorja (packet.getSampleCount(), kar je v mojem testiranju bilo nekaj nad 30) večja kot filter order (default 4), čeprav tega eksplicitno ne testiram oziroma zagotavljam... 
+Imamo kakšna zagotovila glede števila samplov v packetu? (v splošnem verjetno ne, nisem pa tega potem dalje raziskoval)
+
+Hvala vnaprej za odgovore!
+
+Lep pozdrav,
+Aljaž Frančič
