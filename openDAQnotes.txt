@@ -23,3 +23,9 @@ getAvailableFunctionBlocks() == getAvailableFunctionBlockTypes()
 openDAQ\examples\cpp\CMakeLists.txt
 OPENDAQ_CONSOLE_APP not used OPENDAQ_EMPTY_EXAMPLE used instead!
 
+properties/constructor problem...
+
+input port/signal: data types???
+
+std::scoped_lock lock(sync);  // BUTTERWORTH LOCK???
+

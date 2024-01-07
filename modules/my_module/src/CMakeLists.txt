@@ -6,11 +6,13 @@ set(SRC_Include common.h
                 my_module_impl.h
                 my_filter_impl.h
                 dispatch.h
+				butterworth.h
 )
 
 set(SRC_Srcs module_dll.cpp
              my_module_impl.cpp
              my_filter_impl.cpp
+			 butterworth.cpp
 )
 
 prepend_include(${TARGET_FOLDER_NAME} SRC_Include)
@@ -19,9 +21,11 @@ source_group("module" FILES ${MODULE_HEADERS_DIR}/my_module_common.h
                             ${MODULE_HEADERS_DIR}/my_module_impl.h
                             ${MODULE_HEADERS_DIR}/my_filter_impl.h
                             ${MODULE_HEADERS_DIR}/module_dll.h
+							${MODULE_HEADERS_DIR}/butterworth.h
                             module_dll.cpp
                             my_module_impl.cpp
                             my_filter_impl.cpp
+							butterworth.cpp
 )
 
 

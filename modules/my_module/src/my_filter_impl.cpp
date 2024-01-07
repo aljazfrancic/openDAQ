@@ -1,15 +1,13 @@
+#include <coreobjects/eval_value_factory.h>
 #include <my_module/dispatch.h>
 #include <my_module/my_filter_impl.h>
-#include <opendaq/data_descriptor_ptr.h>
-#include <opendaq/input_port_factory.h>
-
-#include <opendaq/event_packet_ptr.h>
-#include <opendaq/signal_factory.h>
-
 #include <opendaq/custom_log.h>
+#include <opendaq/data_descriptor_ptr.h>
 #include <opendaq/event_packet_params.h>
-
-#include <coreobjects/eval_value_factory.h>
+#include <opendaq/event_packet_ptr.h>
+#include <opendaq/input_port_factory.h>
+#include <opendaq/signal_factory.h>
+#include <iostream>
 #include "coreobjects/unit_factory.h"
 #include "opendaq/data_packet.h"
 #include "opendaq/data_packet_ptr.h"
@@ -18,8 +16,6 @@
 #include "opendaq/range_factory.h"
 #include "opendaq/sample_type_traits.h"
 
-#include <iostream>
-
 BEGIN_NAMESPACE_MY_MODULE
 
 namespace My
@@ -27,6 +23,7 @@ namespace My
 
     MyFilterImpl::MyFilterImpl(const ContextPtr& ctx, const ComponentPtr& parent, const StringPtr& localId)
         : FunctionBlock(CreateType(), ctx, parent, localId)
+        , butterworth(FILTER_ORDER, CUTOFF_FREQUENCY, SAMPLING_FREQUENCY)
     {
         createInputPorts();
         createSignals();
@@ -35,10 +32,29 @@ namespace My
 
     void MyFilterImpl::initProperties()
     {
-        const auto cutoffFrequency = IntProperty("CutoffFrequency", 1);
-        objPtr.addProperty(cutoffFrequency);
-        objPtr.getOnPropertyValueWrite("CutoffFrequency") +=
-            [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args) { propertyChanged(true); };
+        const auto filterOrder = IntProperty("FilterOrder", FILTER_ORDER);
+        objPtr.addProperty(filterOrder);
+        objPtr.getOnPropertyValueWrite("FilterOrder") += [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args)
+        {
+            propertyChanged(true);
+            butterworthPropertyChanged();
+        };
+
+        const auto cutoffFrequncy = IntProperty("CutoffFrequency", CUTOFF_FREQUENCY);
+        objPtr.addProperty(cutoffFrequncy);
+        objPtr.getOnPropertyValueWrite("CutoffFrequency") += [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args)
+        {
+            propertyChanged(true);
+            butterworthPropertyChanged();
+        };
+
+        const auto samplingFreqency = IntProperty("SamplingFreqency", SAMPLING_FREQUENCY);
+        objPtr.addProperty(samplingFreqency);
+        objPtr.getOnPropertyValueWrite("SamplingFreqency") += [this](PropertyObjectPtr& obj, PropertyValueEventArgsPtr& args)
+        {
+            propertyChanged(true);
+            butterworthPropertyChanged();
+        };
 
         const auto outputNameProp = StringProperty("OutputName", "");
         objPtr.addProperty(outputNameProp);
@@ -53,6 +69,12 @@ namespace My
         readProperties();
     }
 
+    void MyFilterImpl::butterworthPropertyChanged()
+    {
+        std::scoped_lock lock(sync);  // BUTTERWORTH LOCK???
+        butterworth = Butterworth(order, cutoff, fs);
+    }
+
     void MyFilterImpl::propertyChanged(bool configure)
     {
         std::scoped_lock lock(sync);
@@ -63,7 +85,9 @@ namespace My
 
     void MyFilterImpl::readProperties()
     {
-        cutoffFrequency = objPtr.getPropertyValue("CutoffFrequency");
+        order = objPtr.getPropertyValue("FilterOrder");
+        cutoff = objPtr.getPropertyValue("CutoffFrequency");
+        fs = objPtr.getPropertyValue("SamplingFreqency");
         outputUnit = static_cast<std::string>(objPtr.getPropertyValue("OutputUnit"));
         outputName = static_cast<std::string>(objPtr.getPropertyValue("OutputName"));
     }
@@ -106,7 +130,7 @@ namespace My
 
             auto outputDataDescriptorBuilder = DataDescriptorBuilder().setSampleType(SampleType::Float64);
 
-            // set output value range to be the same as input value range
+            // Set output value range to be the same as input value range
             outputDataDescriptorBuilder.setValueRange(inputDataDescriptor.getValueRange());
 
             if (outputName.empty())
@@ -177,12 +201,22 @@ namespace My
         auto inputData = static_cast<InputType*>(packet.getData());
         const size_t sampleCount = packet.getSampleCount();
 
+        // std::cout << "SAMPLE COUNT: " << sampleCount << std::endl;
+
         const auto outputPacket = DataPacketWithDomain(packet.getDomainPacket(), outputDataDescriptor, sampleCount);
         auto outputData = static_cast<Float*>(outputPacket.getData());
 
+        // To vector
+        std::vector<double> inputDataVector;
         for (size_t i = 0; i < sampleCount; i++)
-            *outputData++ = i;  // scale * static_cast<Float>(*inputData++) + offset;
-        std::cout << "SAMPLE COUNT: " << sampleCount << std::endl;
+            inputDataVector.push_back(static_cast<double>(*inputData++));
+
+        // Apply Butterworth filter
+        std::vector<double> outputDataVector = butterworth.filter(inputDataVector);
+
+        // From vector
+        for (size_t i = 0; i < sampleCount; i++)
+            *outputData++ = outputDataVector[i];
 
         outputSignal.sendPacket(outputPacket);
         outputDomainSignal.sendPacket(packet.getDomainPacket());
