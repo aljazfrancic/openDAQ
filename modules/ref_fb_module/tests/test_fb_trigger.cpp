@@ -14,12 +14,12 @@ class TriggerTest : public testing::Test
 public:
     template <typename T>
     void runTriggerTest(DataRulePtr rule,
-                        vecvec<daq::Bool> expectedData,
-                        vecvec<daq::Int> expectedDomain,
-                        daq::SampleType sampleType,
+                        vecvec<Bool> expectedData,
+                        vecvec<Int> expectedDomain,
+                        SampleType sampleType,
                         // TODO vecvec<SampleTypeToType<T>::Type> mockPackets,
                         vecvec<T> mockPackets,
-                        vecvec<daq::Int> mockDomainPackets = {})
+                        vecvec<Int> mockDomainPackets = {})
     {
         // Create logger, context and module
         auto logger = Logger();
@@ -45,9 +45,9 @@ public:
             {
                 // Explicit creation of one domain packet
                 auto domainPacket = DataPacket(domainSignalDescriptor, mockPackets[i].size());
-                auto domainPacketData = static_cast<daq::Int*>(domainPacket.getData());
+                auto domainPacketData = static_cast<Int*>(domainPacket.getData());
                 for (size_t ii = 0; ii < mockDomainPackets[i].size(); ii++)
-                    *domainPacketData++ = static_cast<daq::Int>(mockDomainPackets[i][ii]);
+                    *domainPacketData++ = static_cast<Int>(mockDomainPackets[i][ii]);
                 domainPackets.push_back(domainPacket);
             }
         }
@@ -59,7 +59,7 @@ public:
                 auto offset = 0;
                 for (size_t ii = 0; ii < i; ii++)
                 {
-                    daq::Int delta = rule.getParameters().get("delta");
+                    Int delta = rule.getParameters().get("delta");
                     offset = offset + mockPackets[ii].size() * delta;
                 }
 
@@ -120,11 +120,11 @@ public:
             // Check packet(s) contents
             for (size_t ii = 0; ii < expectedData[i].size(); ii++)
             {
-                auto data = static_cast<daq::Bool*>(receivedPacketVector[ii].getData());
+                auto data = static_cast<Bool*>(receivedPacketVector[ii].getData());
                 const size_t sampleCount = receivedPacketVector[ii].getSampleCount();
                 auto dataSample = data[0];
 
-                auto domainData = static_cast<daq::Int*>(receivedPacketVector[ii].getDomainPacket().getData());
+                auto domainData = static_cast<Int*>(receivedPacketVector[ii].getDomainPacket().getData());
                 const size_t domainSampleCount = receivedPacketVector[ii].getDomainPacket().getSampleCount();
                 auto domainDataSample = domainData[0];
 
@@ -145,26 +145,26 @@ public:
 // TODO test thresh changed, multiple different types, edge cases
 TEST_F(TriggerTest, TriggerTestFloat)
 {
-    vecvec<daq::Float> mockPackets{
+    vecvec<Float> mockPackets{
         {0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
-    vecvec<daq::Int> mockDomainPackets{
+    vecvec<Int> mockDomainPackets{
         {3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
-    vecvec<daq::Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
-    vecvec<daq::Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
+    vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
+    vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
-    runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, daq::SampleType::Float64, mockPackets, mockDomainPackets);
-    runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, daq::SampleType::Float64, mockPackets);
+    runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, SampleType::Float64, mockPackets, mockDomainPackets);
+    runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Float64, mockPackets);
 }
 
 TEST_F(TriggerTest, TriggerTestInt)
 {
-    vecvec<daq::Int> mockPackets{
+    vecvec<Int> mockPackets{
         {0, 0, 0, 289, 289, 289, 289, 0, 0, 0, 289, 289, 289}, {289, 0, 0, 289, 289}, {289, 289, 0}, {0, 0, 289, 289}};
-    vecvec<daq::Int> mockDomainPackets{
+    vecvec<Int> mockDomainPackets{
         {3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
-    vecvec<daq::Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
-    vecvec<daq::Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
+    vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
+    vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
-    runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, daq::SampleType::Int64, mockPackets, mockDomainPackets);
-    runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, daq::SampleType::Int64, mockPackets);
+    runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, SampleType::Int64, mockPackets, mockDomainPackets);
+    runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Int64, mockPackets);
 }
