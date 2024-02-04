@@ -143,28 +143,40 @@ public:
 };
 
 // TODO test thresh changed, multiple different types, edge cases
-TEST_F(TriggerTest, TriggerTestFloat)
+TEST_F(TriggerTest, TriggerTestFloatExplicit)
 {
-    vecvec<Float> mockPackets{
-        {0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
-    vecvec<Int> mockDomainPackets{
-        {3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
+    vecvec<Float> mockPackets{{0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
+    vecvec<Int> mockDomainPackets{{3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
     vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
     vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
     runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, SampleType::Float64, mockPackets, mockDomainPackets);
+}
+
+TEST_F(TriggerTest, TriggerTestFloatLinear)
+{
+    vecvec<Float> mockPackets{{0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
+    vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
+    vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
+
     runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Float64, mockPackets);
 }
 
-TEST_F(TriggerTest, TriggerTestInt)
+TEST_F(TriggerTest, TriggerTestIntExplicit)
 {
-    vecvec<Int> mockPackets{
-        {0, 0, 0, 289, 289, 289, 289, 0, 0, 0, 289, 289, 289}, {289, 0, 0, 289, 289}, {289, 289, 0}, {0, 0, 289, 289}};
-    vecvec<Int> mockDomainPackets{
-        {3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
+    vecvec<Int> mockPackets{{0, 0, 0, 289, 289, 289, 289, 0, 0, 0, 289, 289, 289}, {289, 0, 0, 289, 289}, {289, 289, 0}, {0, 0, 289, 289}};
+    vecvec<Int> mockDomainPackets{{3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27}, {29, 31, 33, 35, 37}, {39, 41, 43}, {45, 47, 49, 51}};
     vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
     vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
     runTriggerTest(ExplicitDataRule(), expectedData, expectedDomain, SampleType::Int64, mockPackets, mockDomainPackets);
+}
+
+TEST_F(TriggerTest, TriggerTestIntLinear)
+{
+    vecvec<Int> mockPackets{{0, 0, 0, 289, 289, 289, 289, 0, 0, 0, 289, 289, 289}, {289, 0, 0, 289, 289}, {289, 289, 0}, {0, 0, 289, 289}};
+    vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
+    vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
+
     runTriggerTest(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Int64, mockPackets);
 }
