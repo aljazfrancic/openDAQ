@@ -199,6 +199,7 @@ void TriggerFbImpl::processDataPacket(const DataPacketPtr& packet)
 
 void TriggerFbImpl::createInputPorts()
 {
+    // TODO SameThread vs Scheduler
     inputPort = createAndAddInputPort("input", PacketReadyNotification::Scheduler);
 }
 
