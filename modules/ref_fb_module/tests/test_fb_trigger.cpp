@@ -8,7 +8,6 @@ using namespace daq;
 template <typename T>
 using vecvec = std::vector<std::vector<T> >;
 
-// TODO use SetUp, etc.
 class TriggerTest : public testing::Test
 {
 public:
@@ -17,7 +16,6 @@ public:
                         vecvec<Bool> expectedData,
                         vecvec<Int> expectedDomain,
                         SampleType sampleType,
-                        // TODO vecvec<SampleTypeToType<T>::Type> mockPackets,
                         vecvec<T> mockPackets,
                         std::vector<Int> thresholdChangesAfterPackets,
                         vecvec<Int> mockDomainPackets = {},
@@ -159,7 +157,6 @@ private:
     }
 };
 
-// TODO test thresh changed, multiple different types, edge cases
 TEST_F(TriggerTest, TriggerTestFloatExplicit)
 {
     vecvec<Float> mockPackets{{0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
