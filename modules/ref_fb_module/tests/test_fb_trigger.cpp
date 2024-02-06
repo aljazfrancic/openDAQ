@@ -222,14 +222,15 @@ TEST_F(TriggerTest, TriggerTestFloatExplicit)
     auto helper = TriggerTestHelper(
         ExplicitDataRule(), expectedData, expectedDomain, SampleTypeFromType<Float>().SampleType, mockPackets, {}, mockDomainPackets);
 }
-/*
+
 TEST_F(TriggerTest, TriggerTestFloatLinear)
 {
     vecvec<Float> mockPackets{{0.1, 0.2, 0.3, 2, 3, 4, 4.5, 0.2, 0.1, 0, 5, 6, 7}, {6, 0.1, 0, 6, 7}, {7, 8, 0.1}, {0.1, 0.2, 0.6, 0.8}};
     vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
     vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
-    run(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Float64, mockPackets, {});
+    auto helper =
+        TriggerTestHelper(LinearDataRule(2, 3), expectedData, expectedDomain, SampleTypeFromType<Float>().SampleType, mockPackets, {});
 }
 
 TEST_F(TriggerTest, TriggerTestFloatExplicitThresholdChanged)
@@ -241,14 +242,14 @@ TEST_F(TriggerTest, TriggerTestFloatExplicitThresholdChanged)
     std::vector<Int> thresholdChangesAfterPackets{2};
     std::vector<Float> newThresholds{0.1};
 
-    run(ExplicitDataRule(),
-        expectedData,
-        expectedDomain,
-        SampleType::Float64,
-        mockPackets,
-        thresholdChangesAfterPackets,
-        mockDomainPackets,
-        newThresholds);
+    auto helper = TriggerTestHelper(ExplicitDataRule(),
+                                    expectedData,
+                                    expectedDomain,
+                                    SampleTypeFromType<Float>().SampleType,
+                                    mockPackets,
+                                    thresholdChangesAfterPackets,
+                                    mockDomainPackets,
+                                    newThresholds);
 }
 
 TEST_F(TriggerTest, TriggerTestFloatLinearThresholdChanged)
@@ -259,14 +260,14 @@ TEST_F(TriggerTest, TriggerTestFloatLinearThresholdChanged)
     std::vector<Int> thresholdChangesAfterPackets{2};
     std::vector<Float> newThresholds{0.1};
 
-    run(LinearDataRule(2, 3),
-        expectedData,
-        expectedDomain,
-        SampleType::Float64,
-        mockPackets,
-        thresholdChangesAfterPackets,
-        {},
-        newThresholds);
+    auto helper = TriggerTestHelper(LinearDataRule(2, 3),
+                                    expectedData,
+                                    expectedDomain,
+                                    SampleTypeFromType<Float>().SampleType,
+                                    mockPackets,
+                                    thresholdChangesAfterPackets,
+                                    {},
+                                    newThresholds);
 }
 
 TEST_F(TriggerTest, TriggerTestIntExplicit)
@@ -276,7 +277,8 @@ TEST_F(TriggerTest, TriggerTestIntExplicit)
     vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
     vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
-    run(ExplicitDataRule(), expectedData, expectedDomain, SampleType::Int64, mockPackets, {}, mockDomainPackets);
+    auto helper = TriggerTestHelper(
+        ExplicitDataRule(), expectedData, expectedDomain, SampleTypeFromType<Int>().SampleType, mockPackets, {}, mockDomainPackets);
 }
 
 TEST_F(TriggerTest, TriggerTestIntExplicitThresholdChanged)
@@ -288,14 +290,14 @@ TEST_F(TriggerTest, TriggerTestIntExplicitThresholdChanged)
     std::vector<Int> thresholdChangesAfterPackets{2};
     std::vector<Float> newThresholds{200};
 
-    run(ExplicitDataRule(),
-        expectedData,
-        expectedDomain,
-        SampleType::Int64,
-        mockPackets,
-        thresholdChangesAfterPackets,
-        mockDomainPackets,
-        newThresholds);
+    auto helper = TriggerTestHelper(ExplicitDataRule(),
+                                    expectedData,
+                                    expectedDomain,
+                                    SampleTypeFromType<Int>().SampleType,
+                                    mockPackets,
+                                    thresholdChangesAfterPackets,
+                                    mockDomainPackets,
+                                    newThresholds);
 }
 
 TEST_F(TriggerTest, TriggerTestIntLinear)
@@ -304,7 +306,8 @@ TEST_F(TriggerTest, TriggerTestIntLinear)
     vecvec<Bool> expectedData{{true, false, true}, {false, true}, {false}, {true}};
     vecvec<Int> expectedDomain{{9, 17, 23}, {31, 35}, {43}, {49}};
 
-    run(LinearDataRule(2, 3), expectedData, expectedDomain, SampleType::Int64, mockPackets, {});
+    auto helper =
+        TriggerTestHelper(LinearDataRule(2, 3), expectedData, expectedDomain, SampleTypeFromType<Int>().SampleType, mockPackets, {});
 }
 
 TEST_F(TriggerTest, TriggerTestIntLinearThresholdChanged)
@@ -316,13 +319,12 @@ TEST_F(TriggerTest, TriggerTestIntLinearThresholdChanged)
     std::vector<Int> thresholdChangesAfterPackets{2};
     std::vector<Float> newThresholds{200};
 
-    run(LinearDataRule(2, 3),
-        expectedData,
-        expectedDomain,
-        SampleType::Int64,
-        mockPackets,
-        thresholdChangesAfterPackets,
-        {},
-        newThresholds);
+    auto helper = TriggerTestHelper(LinearDataRule(2, 3),
+                                    expectedData,
+                                    expectedDomain,
+                                    SampleTypeFromType<Int>().SampleType,
+                                    mockPackets,
+                                    thresholdChangesAfterPackets,
+                                    {},
+                                    newThresholds);
 }
-*/
