@@ -138,7 +138,7 @@ void TriggerFbImpl::trigger(const DataPacketPtr& inputPacket, size_t triggerInde
     state = !state;
 
     // Explicit vs Linear data rule type
-    size_t triggeredAt = -1;
+    Int triggeredAt = -1;
     if (inputPacket.getDomainPacket().getDataDescriptor().getRule().getType() == DataRuleType::Explicit)
     {
         // Get value of domain packet data at sample i (when triggered)
@@ -200,7 +200,7 @@ void TriggerFbImpl::processDataPacket(const DataPacketPtr& packet)
 void TriggerFbImpl::createInputPorts()
 {
     // TODO SameThread vs Scheduler
-    inputPort = createAndAddInputPort("input", PacketReadyNotification::Scheduler);
+    inputPort = createAndAddInputPort("input", PacketReadyNotification::SameThread);
 }
 
 void TriggerFbImpl::createSignals()
