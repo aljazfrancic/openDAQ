@@ -9,13 +9,13 @@ int main(int /*argc*/, const char* /*argv*/[])
     const InstancePtr instance = Instance(MODULE_PATH);
 
     // Add reference device
-    auto device = instance.addDevice("daqref://device0");
+    const auto device = instance.addDevice("daqref://device0");
 
     // Add statistics function block
-    auto statistics = instance.addFunctionBlock("ref_fb_module_statistics");
+    const auto statistics = instance.addFunctionBlock("ref_fb_module_statistics");
 
     // Add renderer function block
-    auto renderer = instance.addFunctionBlock("ref_fb_module_renderer");
+    const auto renderer = instance.addFunctionBlock("ref_fb_module_renderer");
 
     // Make both renderer axes move in unison
     renderer.setPropertyValue("SingleXAxis", true);
