@@ -18,8 +18,7 @@ int main(int /*argc*/, const char* /*argv*/[])
         std::cout << "  Name: " << info.getName() << ", Address: " << info.getConnectionString()
                   << ", Serial number: " << info.getSerialNumber() << std::endl;
 
-
-    auto strings = std::vector{"daq.opcua://192.168.56.101/", "daqref://device0"};
+    auto strings = std::vector{"daqref://device0", "daq.opcua://192.168.56.101/"};
 
     for (auto& str : strings)
     {
