@@ -14,29 +14,49 @@ int main(int /*argc*/, const char* /*argv*/[])
     auto root = instance.getRootDevice();
 
     FolderConfigPtr signals = root.getItem("Sig");
-    auto signal = Signal(instance.getContext(), signals, "sig1");
-    signals.addItem(signal);
-
-    auto chans = root.getChannels();
-
-    instance.addStandardServers();
 
     // test_last_value_data_packet
     // TODO
 
     // test_last_value_signal
-    auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Float64).build();  // CHANGE
-
-    auto packet = DataPacket(descriptor, 5);
-
-    auto data = static_cast<double*>(packet.getData());  // CHANGE
-    data[4] = 0.3;                                       // CHANGE
+    {
+        auto signal = Signal(instance.getContext(), signals, "float");
+        signals.addItem(signal);
+        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Float64).build();
+        auto packet = DataPacket(descriptor, 5);
+        auto data = static_cast<double*>(packet.getData());
+        data[4] = 0.3;
+        signal.setDescriptor(descriptor);
+        signal.sendPacket(packet);
+    }
 
     // test_last_value_range
-    // TODO
+    {
+        auto signal = Signal(instance.getContext(), signals, "range");
+        signals.addItem(signal);
+        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::RangeInt64).build();
+        auto packet = DataPacket(descriptor, 5);
+        auto data = static_cast<int64_t*>(packet.getData());
+        data[8] = 2;
+        data[9] = 4;
+        signal.setDescriptor(descriptor);
+        signal.sendPacket(packet);
+    }
 
-    signal.setDescriptor(descriptor);
-    signal.sendPacket(packet);
+    // test_last_value_signal_complex_float32
+    {
+        auto signal = Signal(instance.getContext(), signals, "complex");
+        signals.addItem(signal);
+        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::ComplexFloat32).build();
+        auto packet = DataPacket(descriptor, 5);
+        auto data = static_cast<float*>(packet.getData());
+        data[8] = 2.2f;
+        data[9] = 4.4f;
+        signal.setDescriptor(descriptor);
+        signal.sendPacket(packet);
+    }
+
+    instance.addStandardServers();
 
     while (true)
         std::this_thread::sleep_for(100ms);
