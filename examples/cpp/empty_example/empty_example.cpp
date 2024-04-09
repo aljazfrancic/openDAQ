@@ -15,9 +15,6 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     FolderConfigPtr signals = root.getItem("Sig");
 
-    // test_last_value_data_packet
-    // TODO
-
     // test_last_value_signal
     {
         auto signal = Signal(instance.getContext(), signals, "float");
@@ -52,6 +49,29 @@ int main(int /*argc*/, const char* /*argv*/[])
         auto data = static_cast<float*>(packet.getData());
         data[8] = 2.2f;
         data[9] = 4.4f;
+        signal.setDescriptor(descriptor);
+        signal.sendPacket(packet);
+    }
+
+    // test_last_value_signal_list
+    {
+        auto signal = Signal(instance.getContext(), signals, "list");
+        signals.addItem(signal);
+
+        auto numbers = List<INumber>();
+        numbers.pushBack(1);
+        numbers.pushBack(2);
+
+        auto dimensions = List<IDimension>();
+        dimensions.pushBack(Dimension(ListDimensionRule(numbers)));
+
+        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Int64).setDimensions(dimensions).build();
+
+        auto packet = DataPacket(descriptor, 5);
+        int64_t* data = static_cast<int64_t*>(packet.getData());
+        data[8] = 4;
+        data[9] = 44;
+
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
     }
