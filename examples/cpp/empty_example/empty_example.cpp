@@ -53,6 +53,43 @@ int main(int /*argc*/, const char* /*argv*/[])
         signal.sendPacket(packet);
     }
 
+    // test_last_value_signal_struct
+    {
+        auto signal = Signal(instance.getContext(), signals, "MyTestStructType");
+
+        // Create data descriptor
+        const auto descriptor = DataDescriptorBuilder()
+                                    .setName("MyTestStructType")
+                                    .setSampleType(SampleType::Struct)
+                                    .setStructFields(List<DataDescriptorPtr>(
+                                        DataDescriptorBuilder().setName("Int32").setSampleType(SampleType::Int32).build(),
+                                        DataDescriptorBuilder().setName("Float64").setSampleType(SampleType::Float64).build()))
+                                    .build();
+
+        // Prepare data packet
+        auto sizeInBytes = sizeof(int32_t) + sizeof(double);
+        const auto packet = DataPacket(descriptor, 5);
+        auto data = packet.getData();
+
+        // Start points to beggining of data
+        auto start = static_cast<char*>(data);
+
+        // First member of data is int32_t
+        void* a = start + sizeInBytes * 4;
+        auto A = static_cast<int32_t*>(a);
+        *A = 12;
+
+        // Second member of data is double
+        void* b = start + sizeInBytes * 4 + sizeof(int32_t);
+        auto B = static_cast<double*>(b);
+        *B = 15.1;
+        
+        signal.setDescriptor(descriptor);
+        signal.sendPacket(packet);
+
+        signals.addItem(signal);
+    }
+
     // test_last_value_signal_list
     {
         auto signal = Signal(instance.getContext(), signals, "list");
