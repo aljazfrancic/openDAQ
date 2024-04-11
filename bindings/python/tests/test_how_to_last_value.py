@@ -49,14 +49,16 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
     '''
 
     def test_last_value_signal_list(self):
-        my_signal = opendaq.Instance().get_signals()[0]
+        instance = opendaq.Instance()
+        dev = instance.add_device("daq.opcua://localhost")
+        my_signal = dev.signals[0]
 
         # START DOCS CODE
 
         # Get last value of a Signal
         my_last_value = my_signal.last_value
 
-        # Extract the third item
+        # Extract the second item
         third = my_last_value[1]
 
         # END DOCS CODE

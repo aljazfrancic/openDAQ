@@ -18,6 +18,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     // test_last_value_signal_list
     {
         auto signal = Signal(instance.getContext(), signals, "list");
+        signals.addItem(signal);
 
         auto numbers = List<INumber>();
         numbers.pushBack(1);
@@ -35,13 +36,12 @@ int main(int /*argc*/, const char* /*argv*/[])
 
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
-
-        signals.addItem(signal);
     }
 
     // test_last_value_signal_struct
     {
         auto signal = Signal(instance.getContext(), signals, "MyTestStructType");
+        signals.addItem(signal);
 
         // Create data descriptor
         const auto descriptor = DataDescriptorBuilder()
@@ -72,8 +72,6 @@ int main(int /*argc*/, const char* /*argv*/[])
 
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
-
-        signals.addItem(signal);
     }
 
     instance.addStandardServers();
