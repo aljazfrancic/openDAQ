@@ -55,13 +55,15 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
 
         # START DOCS CODE
 
+        # Check Dimensions count in Signal's Data Descriptor
+        assert len(my_signal.descriptor.dimensions) == 1
         # Get last value of a Signal
-        my_last_value = my_signal.last_value
-
-        # Extract the second item
-        third = my_last_value[1]
+        my_list = my_signal.last_value
+        # Extract the second item on my_list
+        my_item = my_list[1]
 
         # END DOCS CODE
+        self.assertEqual(my_item, 44)
 
 
 
