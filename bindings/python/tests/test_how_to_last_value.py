@@ -65,6 +65,20 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
         # END DOCS CODE
         self.assertEqual(my_item, 44)
 
+    def test_last_value_signal_struct(self):
+        instance = opendaq.Instance()
+        dev = instance.add_device("daq.opcua://localhost")
+        my_signal = dev.signals[1]
+
+        # START DOCS CODE
+
+        # Get last value of a Signal
+        my_list = my_signal.last_value
+
+        # END DOCS CODE
+
+        pass
+
 
 
 if __name__ == '__main__':

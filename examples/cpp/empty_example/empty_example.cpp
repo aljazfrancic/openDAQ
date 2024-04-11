@@ -72,6 +72,8 @@ int main(int /*argc*/, const char* /*argv*/[])
 
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
+
+        auto lv = signal.getLastValue();
     }
 
     instance.addStandardServers();
