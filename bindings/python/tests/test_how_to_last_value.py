@@ -21,6 +21,7 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
 
         self.assertEqual(my_last_value, 0.3)
 
+
     '''
     # ONLY WORKS IF APPROPRIATE SERVER IS RUNNING ON "daq.opcua://localhost"
     def test_last_value_signal_list(self):
@@ -46,6 +47,21 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
         self.assertEqual(my_item, 44)
         self.assertEqual(my_sample_type, opendaq.SampleType.Int64)
     '''
+
+    def test_last_value_signal_list(self):
+        my_signal = opendaq.Instance().get_signals()[0]
+
+        # START DOCS CODE
+
+        # Get last value of a Signal
+        my_last_value = my_signal.last_value
+
+        # Extract the third item
+        third = my_last_value[1]
+
+        # END DOCS CODE
+
+
 
 if __name__ == '__main__':
     unittest.main()

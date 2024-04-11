@@ -15,42 +15,28 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     FolderConfigPtr signals = root.getItem("Sig");
 
-    // test_last_value_signal
+    // test_last_value_signal_list
     {
-        auto signal = Signal(instance.getContext(), signals, "float");
-        signals.addItem(signal);
-        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Float64).build();
-        auto packet = DataPacket(descriptor, 5);
-        auto data = static_cast<double*>(packet.getData());
-        data[4] = 0.3;
-        signal.setDescriptor(descriptor);
-        signal.sendPacket(packet);
-    }
+        auto signal = Signal(instance.getContext(), signals, "list");
 
-    // test_last_value_range
-    {
-        auto signal = Signal(instance.getContext(), signals, "range");
-        signals.addItem(signal);
-        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::RangeInt64).build();
-        auto packet = DataPacket(descriptor, 5);
-        auto data = static_cast<int64_t*>(packet.getData());
-        data[8] = 2;
-        data[9] = 4;
-        signal.setDescriptor(descriptor);
-        signal.sendPacket(packet);
-    }
+        auto numbers = List<INumber>();
+        numbers.pushBack(1);
+        numbers.pushBack(2);
 
-    // test_last_value_signal_complex_float32
-    {
-        auto signal = Signal(instance.getContext(), signals, "complex");
-        signals.addItem(signal);
-        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::ComplexFloat32).build();
+        auto dimensions = List<IDimension>();
+        dimensions.pushBack(Dimension(ListDimensionRule(numbers)));
+
+        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Int64).setDimensions(dimensions).build();
+
         auto packet = DataPacket(descriptor, 5);
-        auto data = static_cast<float*>(packet.getData());
-        data[8] = 2.2f;
-        data[9] = 4.4f;
+        int64_t* data = static_cast<int64_t*>(packet.getData());
+        data[8] = 4;
+        data[9] = 44;
+
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
+
+        signals.addItem(signal);
     }
 
     // test_last_value_signal_struct
@@ -83,34 +69,11 @@ int main(int /*argc*/, const char* /*argv*/[])
         void* b = start + sizeInBytes * 4 + sizeof(int32_t);
         auto B = static_cast<double*>(b);
         *B = 15.1;
-        
+
         signal.setDescriptor(descriptor);
         signal.sendPacket(packet);
 
         signals.addItem(signal);
-    }
-
-    // test_last_value_signal_list
-    {
-        auto signal = Signal(instance.getContext(), signals, "list");
-        signals.addItem(signal);
-
-        auto numbers = List<INumber>();
-        numbers.pushBack(1);
-        numbers.pushBack(2);
-
-        auto dimensions = List<IDimension>();
-        dimensions.pushBack(Dimension(ListDimensionRule(numbers)));
-
-        auto descriptor = DataDescriptorBuilder().setSampleType(SampleType::Int64).setDimensions(dimensions).build();
-
-        auto packet = DataPacket(descriptor, 5);
-        int64_t* data = static_cast<int64_t*>(packet.getData());
-        data[8] = 4;
-        data[9] = 44;
-
-        signal.setDescriptor(descriptor);
-        signal.sendPacket(packet);
     }
 
     instance.addStandardServers();
