@@ -59,7 +59,7 @@ class TestDocumentationHowToLastValue(opendaq_test.TestCase):
         assert len(my_signal.descriptor.dimensions) == 1
         # Get last value of a Signal
         my_list = my_signal.last_value
-        # Extract the second item on my_list
+        # Extract the second item on list
         my_item = my_list[1]
 
         # END DOCS CODE
