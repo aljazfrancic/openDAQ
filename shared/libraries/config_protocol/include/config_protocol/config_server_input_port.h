@@ -24,16 +24,20 @@ class ConfigServerInputPort
 {
 public:
     static BaseObjectPtr connect(uint16_t protocolVersion, const InputPortPtr& inputPort, const SignalPtr& signal, const UserPtr& user);
-    static BaseObjectPtr disconnect(uint16_t protocolVersion, const InputPortPtr& inputPort, const ParamsDictPtr& params, const UserPtr& user);
+    static BaseObjectPtr accepts(uint16_t protocolVersion, const InputPortPtr& inputPort, const SignalPtr& signal, const UserPtr& user);
+    static BaseObjectPtr disconnect(uint16_t protocolVersion,
+                                    const InputPortPtr& inputPort,
+                                    const ParamsDictPtr& params,
+                                    const UserPtr& user);
 };
 
 inline BaseObjectPtr ConfigServerInputPort::connect(uint16_t protocolVersion, const InputPortPtr& inputPort, const SignalPtr& signal, const UserPtr& user)
 {
-    ConfigServerAccessControl::protectObject(inputPort, user, {Permission::Read, Permission::Write});
-    ConfigServerAccessControl::protectObject(signal, user, Permission::Read);
-
     if (!signal.assigned())
         throw NotFoundException("Cannot connect requested signal. Signal not found");
+
+    ConfigServerAccessControl::protectObject(inputPort, user, {Permission::Read, Permission::Write});
+    ConfigServerAccessControl::protectObject(signal, user, Permission::Read);
 
     inputPort.connect(signal);
     return nullptr;
@@ -45,6 +49,20 @@ inline BaseObjectPtr ConfigServerInputPort::disconnect(uint16_t protocolVersion,
 
     inputPort.disconnect();
     return nullptr;
+}
+
+inline BaseObjectPtr ConfigServerInputPort::accepts(uint16_t protocolVersion,
+                                                    const InputPortPtr& inputPort,
+                                                    const SignalPtr& signal,
+                                                    const UserPtr& user)
+{
+    if (!signal.assigned())
+        throw NotFoundException("Cannot connect requested signal. Signal not found");
+
+    ConfigServerAccessControl::protectObject(inputPort, user, Permission::Read);
+    ConfigServerAccessControl::protectObject(signal, user, Permission::Read);
+
+    return inputPort.acceptsSignal(signal);
 }
 
 }

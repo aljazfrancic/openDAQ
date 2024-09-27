@@ -114,6 +114,7 @@ private:
     BaseObjectPtr connectSignal(uint16_t protocolVersion, const InputPortPtr& inputPort, const ParamsDictPtr& params);
     BaseObjectPtr connectExternalSignal(uint16_t protocolVersion, const InputPortPtr& inputPort, const ParamsDictPtr& params);
     BaseObjectPtr removeExternalSignals(const ParamsDictPtr& params);
+    BaseObjectPtr acceptsSignal(uint16_t protocolVersion, const InputPortPtr& inputPort, const ParamsDictPtr& params);
 
     template <class SmartPtr, class F>
     BaseObjectPtr bindComponentWrapper(const F& f, const ParamsDictPtr& params);
