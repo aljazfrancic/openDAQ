@@ -62,7 +62,7 @@ inline BaseObjectPtr ConfigServerInputPort::accepts(uint16_t protocolVersion,
     ConfigServerAccessControl::protectObject(inputPort, user, Permission::Read);
     ConfigServerAccessControl::protectObject(signal, user, Permission::Read);
 
-    return inputPort.acceptsSignal(signal);
+    return Boolean(inputPort.acceptsSignal(signal));
 }
 
 }
