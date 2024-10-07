@@ -158,6 +158,7 @@ void ConfigProtocolServer::buildRpcDispatchStructure()
     addHandler<DevicePtr>("AddFunctionBlock", &ConfigServerDevice::addFunctionBlock);
     addHandler<DevicePtr>("RemoveFunctionBlock", &ConfigServerDevice::removeFunctionBlock);
     addHandler<DevicePtr>("GetTicksSinceOrigin", &ConfigServerDevice::getTicksSinceOrigin);
+    addHandler<DevicePtr>("GetAvailableDevices", &ConfigServerDevice::getAvailableDevices);
 
     addHandler<SignalPtr>("GetLastValue", &ConfigServerSignal::getLastValue);
 

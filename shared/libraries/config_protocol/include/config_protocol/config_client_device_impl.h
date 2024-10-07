@@ -132,7 +132,7 @@ uint64_t GenericConfigClientDeviceImpl<TDeviceBase>::onGetTicksSinceOrigin()
 template <class TDeviceBase>
 ListPtr<IDeviceInfo> GenericConfigClientDeviceImpl<TDeviceBase>::onGetAvailableDevices()
 {
-    return List<IDeviceInfo>();
+    return this->clientComm->sendComponentCommand(this->remoteGlobalId, "GetAvailableDevices");
 }
 
 template <class TDeviceBase>

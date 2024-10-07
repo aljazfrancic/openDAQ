@@ -31,6 +31,7 @@ public:
     static BaseObjectPtr removeFunctionBlock(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
     static BaseObjectPtr getInfo(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
     static BaseObjectPtr getTicksSinceOrigin(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
+    static BaseObjectPtr getAvailableDevices(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
 };
 
 inline BaseObjectPtr ConfigServerDevice::getAvailableFunctionBlockTypes(uint16_t protocolVersion,
@@ -86,6 +87,15 @@ inline BaseObjectPtr ConfigServerDevice::getTicksSinceOrigin(uint16_t protocolVe
     ConfigServerAccessControl::protectObject(device, user, Permission::Read);
 
     return device.getTicksSinceOrigin();
+}
+
+inline BaseObjectPtr ConfigServerDevice::getAvailableDevices(uint16_t protocolVersion,
+                                                   const DevicePtr& device,
+                                                   const ParamsDictPtr& params,
+                                                   const UserPtr& user)
+{
+    ConfigServerAccessControl::protectObject(device, user, Permission::Read);
+    return device.getAvailableDevices();
 }
 
 }
