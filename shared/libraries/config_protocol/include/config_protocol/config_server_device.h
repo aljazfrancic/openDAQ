@@ -32,6 +32,7 @@ public:
     static BaseObjectPtr getInfo(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
     static BaseObjectPtr getTicksSinceOrigin(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
     static BaseObjectPtr getAvailableDevices(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
+    static BaseObjectPtr addDevice(uint16_t protocolVersion, const DevicePtr& device, const ParamsDictPtr& params, const UserPtr& user);
 };
 
 inline BaseObjectPtr ConfigServerDevice::getAvailableFunctionBlockTypes(uint16_t protocolVersion,
@@ -90,12 +91,28 @@ inline BaseObjectPtr ConfigServerDevice::getTicksSinceOrigin(uint16_t protocolVe
 }
 
 inline BaseObjectPtr ConfigServerDevice::getAvailableDevices(uint16_t protocolVersion,
+                                                             const DevicePtr& device,
+                                                             const ParamsDictPtr& params,
+                                                             const UserPtr& user)
+{
+    ConfigServerAccessControl::protectObject(device, user, Permission::Read);
+    return device.getAvailableDevices();
+}
+
+inline BaseObjectPtr ConfigServerDevice::addDevice(uint16_t protocolVersion,
                                                    const DevicePtr& device,
                                                    const ParamsDictPtr& params,
                                                    const UserPtr& user)
 {
-    ConfigServerAccessControl::protectObject(device, user, Permission::Read);
-    return device.getAvailableDevices();
+    ConfigServerAccessControl::protectObject(device, user, {Permission::Read, Permission::Write});
+
+    const auto connectionString = params.get("ConnectionString");
+    PropertyObjectPtr config;
+    if (params.hasKey("Config"))
+        config = params.get("Config");
+
+    const auto dev = device.addDevice(connectionString, config);
+    return ComponentHolder(dev);
 }
 
 }
