@@ -316,6 +316,7 @@ void GenericConfigClientDeviceImpl<TDeviceBase>::componentAdded(const CoreEventA
     {
         this->clientComm->connectDomainSignals(comp);
         this->addExistingComponent(comp);
+        this->clientComm->connectInputPorts(comp); // TODO: check if this is needed
     }
 }
 
