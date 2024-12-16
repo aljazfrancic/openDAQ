@@ -1,18 +1,19 @@
-/**
- * Empty example
- */
 
-#include <iostream>
 #include <opendaq/opendaq.h>
+#include <iostream>
 
 using namespace daq;
 
 int main(int /*argc*/, const char* /*argv*/[])
 {
-    // Create an Instance, loading modules at MODULE_PATH
-    const InstancePtr instance = Instance(MODULE_PATH);
+    const InstancePtr instance = Instance("");
+    auto dev = instance.addDevice("daq://openDAQ_007");
 
-    std::cout << "Press \"enter\" to exit the application..." << std::endl;
+    auto myStructProp = dev.getPropertyValue("MyStructProp");
+    auto myStruct = myStructProp.asPtr<IStruct>();
+    auto myField = myStruct.get("FieldName").asPtr<IString>();
+    std::cout << myField << std::endl;
+
     std::cin.get();
     return 0;
 }

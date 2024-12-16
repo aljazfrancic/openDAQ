@@ -1,25 +1,25 @@
-/**
- * Creates a simulated reference device and sets it as the root device.
- * An openDAQ server and a web-socket streaming server are started on the aplication.
- */
-
-#include <iostream>
 #include <opendaq/opendaq.h>
+#include <iostream>
 
 using namespace daq;
 
 int main(int /*argc*/, const char* /*argv*/[])
 {
-    // Create an openDAQ instance, loading modules at MODULE_PATH
-    const InstancePtr instance = Instance(MODULE_PATH);
+    PropertyObjectPtr config = PropertyObject();
+    config.addProperty(StringProperty("SerialNumber", "007"));
+    const InstancePtr instance = InstanceBuilder().addDiscoveryServer("mdns").setRootDevice("daqref://device0", config).build();
+    auto servers = instance.addStandardServers();
+    for (const auto& server : servers)
+        server.enableDiscovery();
 
-    // Add a reference device as root device
-    instance.setRootDevice("daqref://device0");
-    
-    // Start streaming and openDAQ OpcUa servers
-    instance.addStandardServers();
-    
-    std::cout << "Press \"enter\" to exit the application..." << std::endl;
+    auto typeManager = instance.getContext().getTypeManager();
+    typeManager.addType(StructType("StructName", {"FieldName"}, {"Default"}, List<IType>(SimpleType(ctString))));
+
+    auto myStruct = StructBuilder("StructName", typeManager).set("FieldName", "FieldValue µ").build();
+    auto structProp = PropertyBuilder("MyStructProp").setDefaultValue(myStruct).setValueType(ctStruct).build();
+
+    instance.addProperty(structProp);
+
     std::cin.get();
     return 0;
 }
