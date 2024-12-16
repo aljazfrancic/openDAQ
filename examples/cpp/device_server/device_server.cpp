@@ -12,11 +12,8 @@ int main(int /*argc*/, const char* /*argv*/[])
     for (const auto& server : servers)
         server.enableDiscovery();
 
-    auto typeManager = instance.getContext().getTypeManager();
-    typeManager.addType(StructType("StructName", {"FieldName"}, {"Default"}, List<IType>(SimpleType(ctString))));
-
-    auto myStruct = StructBuilder("StructName", typeManager).set("FieldName", "FieldValue µ").build();
-    auto structProp = PropertyBuilder("MyStructProp").setDefaultValue(myStruct).setValueType(ctStruct).build();
+    auto myUnit = Unit("µ", -1, "SpecialName", "Quant");
+    auto structProp = PropertyBuilder("MyStructProp").setDefaultValue(3).setValueType(ctInt).setUnit(myUnit).build();
 
     instance.addProperty(structProp);
 

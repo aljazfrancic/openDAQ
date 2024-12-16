@@ -5,9 +5,7 @@ using Daq.Core.OpenDAQ;
 
 var instance = OpenDAQFactory.Instance();
 var dev = instance.AddDevice("daq://openDAQ_007");
-
-var myStructProp = dev.GetPropertyValue("MyStructProp");
-var myStruct = myStructProp.Cast<Struct>();
-String myString = myStruct.Get("FieldName");
-Console.WriteLine(myString);
+var myStructProp = dev.GetProperty("MyStructProp");
+var mySymbol = myStructProp.Unit.Symbol;
+Console.WriteLine(mySymbol);
 Console.ReadLine();
