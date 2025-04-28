@@ -15,17 +15,18 @@ int main(int /*argc*/, const char* /*argv*/[])
     for (const auto& server : servers)
         server.enableDiscovery();
 
-    const auto sumXYProp =
-        FunctionPropertyBuilder(
-            "SumXY",
-            FunctionInfo(ctInt,
-                         List<IArgumentInfo>(ArgumentInfo("Val1", ctInt), ArgumentInfo("Val2", ctInt), ArgumentInfo("Val3", ctString))))
-            .build();
+    const auto sumXYProp = FunctionPropertyBuilder("SumXY",
+                                                   FunctionInfo(ctInt,
+                                                                List<IArgumentInfo>(ArgumentInfo("Val1", ctInt),
+                                                                                    ArgumentInfo("Val2", ctInt),
+                                                                                    ArgumentInfo("Val3", ctString),
+                                                                                    ArgumentInfo("Val4", ctList))))
+                               .build();
 
     instance.addProperty(sumXYProp);
 
     auto myFun = Function(
-        [](Int val1, Int val2, StringPtr val3)
+        [](Int val1, Int val2, StringPtr val3, ListPtr<IInteger> val4)
         {
             std::cout << "SumXY str is: " << val3 << "\n";
             return Integer(val1 + val2);
@@ -35,9 +36,13 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     FunctionPtr sum = instance.getPropertyValue("SumXY");
 
-    std::cout << "Result sum: " << sum(2, 3, "example") << "\n";
+    auto list = List<IInteger>();
+    list.pushBack(33);
+    list.pushBack(34);
 
-    std::cout << "Result myFun: " << myFun(2, 3, "example") << "\n";
+    std::cout << "Result sum: " << sum(2, 3, "example", list) << "\n";
+
+    std::cout << "Result myFun: " << myFun(2, 3, "example", list) << "\n";
 
     std::cout << "Press \"enter\" to exit the application..." << "\n";
     std::cin.get();
