@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+import re
+
+import opendaq
 import opendaq as daq
 
 from .dialog import Dialog
@@ -94,7 +97,20 @@ class FunctionDialog(Dialog):
         if value_type == daq.CoreType.ctString:
             return str(*args)
         if value_type == daq.CoreType.ctList:
-            return list(*args)
+            daq_list = daq.List()
+            text = ''.join(str(*args).split()) # remove all whitespace
+            for item in text.split(','):
+                if item == 'True':
+                    daq_list.append(opendaq.Boolean(True))
+                elif item == 'False':
+                    daq_list.append(opendaq.Boolean(False))
+                else:
+                    ev = eval(re.sub(r'(?<![\[\]\',"])\b(?!True\b|False\b|None\b|\d+\.?\d*)\w+\b(?![\[\]\',"])', r'"\g<0>"', item))
+                    if '.' in text:
+                        daq_list.append(daq.Float(ev))
+                    else:
+                        daq_list.append(ev)
+            return daq_list
         return None
 
     def exec_clicked(self):
@@ -103,8 +119,7 @@ class FunctionDialog(Dialog):
             args = []
             if self.node.callable_info.arguments:
                 for argument in self.node.callable_info.arguments:
-                    args.append(self.create_argument(argument.Type,
-                                self.arguments[argument.Name].get()))
+                    args.append(self.create_argument(argument.Type, self.arguments[argument.Name].get()))
 
             ret = self.function(*args)
         except (Exception, ValueError) as e:
