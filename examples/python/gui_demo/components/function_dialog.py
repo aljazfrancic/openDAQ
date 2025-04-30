@@ -1,9 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-import re
-
-import opendaq
 import opendaq as daq
 
 from .dialog import Dialog
@@ -86,6 +83,15 @@ class FunctionDialog(Dialog):
             command=self.cancel_clicked)
         self.cancel_button.pack(side=tk.RIGHT, padx=5, pady=5)
 
+    def is_int(self, s):
+        try:
+            num = float(s)
+            if num.is_integer():
+                return True
+        except Exception:
+            return False
+
+
     def create_argument(self, value_type_num: int, *args):
         value_type = daq.CoreType(value_type_num)
         if value_type == daq.CoreType.ctBool:
@@ -100,16 +106,16 @@ class FunctionDialog(Dialog):
             daq_list = daq.List()
             text = ''.join(str(*args).split()) # remove all whitespace
             for item in text.split(','):
-                if item == 'True':
-                    daq_list.append(opendaq.Boolean(True))
-                elif item == 'False':
-                    daq_list.append(opendaq.Boolean(False))
-                else:
-                    ev = eval(re.sub(r'(?<![\[\]\',"])\b(?!True\b|False\b|None\b|\d+\.?\d*)\w+\b(?![\[\]\',"])', r'"\g<0>"', item))
-                    if '.' in text:
-                        daq_list.append(daq.Float(ev))
-                    else:
-                        daq_list.append(ev)
+                if item == 'True' or item == 'true': # bool
+                    daq_list.append(daq.Boolean(True))
+                elif item == 'False' or item == 'false': # bool
+                    daq_list.append(daq.Boolean(False))
+                elif '.' in text: # float
+                    daq_list.append(daq.Float(float(item)))
+                elif self.is_int(item): # int
+                    daq_list.append(daq.Integer(int(item)))
+                else: # string
+                    daq_list.append(item)
             return daq_list
         return None
 
