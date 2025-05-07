@@ -16,7 +16,7 @@ int main(int /*argc*/, const char* /*argv*/[])
         server.enableDiscovery();
 
     const auto sumXYProp = FunctionPropertyBuilder("SumXY",
-                                                   FunctionInfo(ctInt,
+                                                   FunctionInfo(ctList,
                                                                 List<IArgumentInfo>(ArgumentInfo("Val1", ctInt),
                                                                                     ArgumentInfo("Val2", ctInt),
                                                                                     ArgumentInfo("Val3", ctString),
@@ -52,7 +52,7 @@ int main(int /*argc*/, const char* /*argv*/[])
                 std::cout << "  " << val7[i] << "\n";
             }
             std::cout << "\n\n";
-            return Integer(val1 + val2);
+            return val5;
         });
 
     instance.setPropertyValue("SumXY", myFun);
@@ -81,11 +81,11 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     auto result = sum(2, 3, "example", list, stringList, floatList, boolList);
 
-    auto ptr = result.asPtrOrNull<IInteger>();
+    auto ptr = result.asPtrOrNull<IList>();
 
     if (ptr.assigned())
     {
-        std::cout << "Result asPtrOrNull: " << ptr.toString() << "\n";
+        std::cout << "Result asPtrOrNull: " << ptr[0].asPtrOrNull<IString>() << "\n";
     }
     else
     {
