@@ -29,7 +29,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     instance.addProperty(sumXYProp);
 
     auto myFun = Function(
-        [](Int val1, Int val2, StringPtr val3, ListPtr<IInteger> val4, ListPtr<IString> val5, ListPtr<IFloat> val6, ListPtr<IBoolean> val7)
+        [](Int val1, Int val2, StringPtr val3, ListPtr<IInteger> val4, ListPtr<IBaseObject> val5, ListPtr<IFloat> val6, ListPtr<IBoolean> val7)
         {
             std::cout << "val1: " << val1 << " val2: " << val2 << " val3: " << val3 << "\n" << "val4: " << "\n";
             for (size_t i = 0; i < val4.getCount(); i++)
@@ -63,9 +63,9 @@ int main(int /*argc*/, const char* /*argv*/[])
     list.pushBack(33);
     list.pushBack(34);
 
-    auto stringList = List<IString>();
+    auto stringList = List<IBaseObject>();
     stringList.pushBack("test1");
-    stringList.pushBack("test2");
+    stringList.pushBack(1.2);
 
     auto floatList = List<IFloat>();
     floatList.pushBack(1.1f);
@@ -85,11 +85,20 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     if (ptr.assigned())
     {
-        std::cout << "Result asPtrOrNull: " << ptr[0].asPtrOrNull<IString>() << "\n";
+        std::cout << "First elt in list asPtrOrNull: " << ptr[0].asPtrOrNull<IString>() << "\n";
+        std::cout << "Second elt in list asPtrOrNull: " << ptr[1].asPtrOrNull<IFloat>() << "\n";
     }
     else
     {
         std::cout << "Result asPtrOrNull: null" << "\n";
+    }
+
+    std::cout << "\n";
+
+    for (size_t i = 0; i < ptr.getCount(); i++)
+    {
+        auto res = ptr[i].asPtrOrNull<IInspectable>().getRuntimeClassName();
+        std::cout << "Classname: " << res << "\n";
     }
 
     std::cout << "Press \"enter\" to exit the application..." << "\n";
