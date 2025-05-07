@@ -79,6 +79,19 @@ int main(int /*argc*/, const char* /*argv*/[])
 
     std::cout << "Result myFun: " << myFun(2, 3, "example", list, stringList, floatList, boolList) << "\n";
 
+    auto result = sum(2, 3, "example", list, stringList, floatList, boolList);
+
+    auto ptr = result.asPtrOrNull<IInteger>();
+
+    if (ptr.assigned())
+    {
+        std::cout << "Result asPtrOrNull: " << ptr.toString() << "\n";
+    }
+    else
+    {
+        std::cout << "Result asPtrOrNull: null" << "\n";
+    }
+
     std::cout << "Press \"enter\" to exit the application..." << "\n";
     std::cin.get();
 
