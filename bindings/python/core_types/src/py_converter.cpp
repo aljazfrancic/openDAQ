@@ -58,9 +58,9 @@ daq::ObjectPtr<daq::IBaseObject> pyObjectToBaseObject(const py::object& handle, 
         auto pyList = handle.cast<py::list>();
         daq::ListPtr<daq::IBaseObject> daqList = daq::List<daq::IBaseObject>();
         
-        for (auto item : pyList)
+        for (size_t i = 0; i < pyList.size(); i++)
         {
-            daqList.pushBack(pyObjectToBaseObject(item, false));
+            daqList.pushBack(pyObjectToBaseObject(pyList[i], false));
         }
         return daqList;
     }
