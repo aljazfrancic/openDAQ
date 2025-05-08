@@ -53,6 +53,17 @@ daq::ObjectPtr<daq::IBaseObject> pyObjectToBaseObject(const py::object& handle, 
         const daq::Int denominator = handle.attr("denominator").cast<py::int_>();
         return daq::Ratio(numerator, denominator);
     }
+    else if (py::isinstance<py::list>(handle))
+    {
+        auto pyList = handle.cast<py::list>();
+        daq::ListPtr<daq::IBaseObject> daqList = daq::List<daq::IBaseObject>();
+        
+        for (auto item : pyList)
+        {
+            daqList.pushBack(pyObjectToBaseObject(item, false));
+        }
+        return daqList;
+    }
 
     auto obj = py::reinterpret_borrow<py::object>(handle);
     return wrapPyObject(std::move(obj));
