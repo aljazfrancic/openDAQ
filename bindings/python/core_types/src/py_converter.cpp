@@ -27,6 +27,11 @@ daq::ObjectPtr<daq::IBaseObject> pyObjectToBaseObject(const py::object& handle, 
     {
         return intf;
     }
+    else if (py::isinstance<py::bool_>(handle))
+    {
+        const daq::Bool value = handle.cast<py::bool_>();
+        return daq::Boolean(value);
+    }
     else if (py::isinstance<py::int_>(handle))
     {
         const daq::Int value = handle.cast<py::int_>();
@@ -36,11 +41,6 @@ daq::ObjectPtr<daq::IBaseObject> pyObjectToBaseObject(const py::object& handle, 
     {
         const daq::Float value = handle.cast<py::float_>();
         return daq::Floating(value);
-    }
-    else if (py::isinstance<py::bool_>(handle))
-    {
-        const daq::Bool value = handle.cast<py::bool_>();
-        return daq::Boolean(value);
     }
     else if (py::isinstance<py::str>(handle))
     {
