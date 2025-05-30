@@ -22,10 +22,11 @@ jobs:
       - name: Install Antora
         run: npm i antora
 
-      - name: Install Antora extensions
+      - name: Install Antora extensions, etc.
         run: |
           npm i @asciidoctor/tabs
           npm i @springio/antora-extensions
+          npm install vinyl
 
       - name: Clone asam-antora-extensions
         run: git clone https://code.asam.net/common/asam-antora-extensions.git asam-antora-extensions
