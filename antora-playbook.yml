@@ -14,6 +14,12 @@ asciidoc:
 antora:
   extensions:
     - require: "@springio/antora-extensions/tabs-migration-extension"
+    - require: './asam-antora-extensions/asam-antora_extension.js'
+      doxygen: true
+
+asciidoctor_attributes:
+  doxygen_source_folder: "."
+  doxygen_module: "Reference"
 
 content:
   sources:
