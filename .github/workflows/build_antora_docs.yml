@@ -27,6 +27,9 @@ jobs:
           npm i @asciidoctor/tabs
           npm i @springio/antora-extensions
 
+      - name: Clone asam-antora-extensions
+        run: git clone https://code.asam.net/common/asam-antora-extensions.git asam-antora-extensions
+
       - name: Run Antora
         run: >
           npx antora antora-playbook.yml
