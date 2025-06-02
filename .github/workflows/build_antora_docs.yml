@@ -1,44 +1,67 @@
 name: Build openDAQ SDK documentation
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 env:
   site_path: ${{ github.workspace }}/build/site/
-  site_zip: ${{ github.workspace }}/build/user_guide.zip
+  site_zip:  ${{ github.workspace }}/build/user_guide.zip
+
 jobs:
   build_documentation:
     runs-on: ubuntu-22.04
-    name: Build SDK Documentation
-    timeout-minutes: 2
+    timeout-minutes: 7
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Node.js
+      - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 18
 
-      - name: Install Antora
-        run: npm i antora vinyl
-
-      - name: Clone ASAM Antora extensions
+      # ───────────────────────────────────────────────────────────────
+      # 1) Install Antora + global extensions in repo’s node_modules
+      # ───────────────────────────────────────────────────────────────
+      - name: Install Antora and global JS deps
         run: |
-          git clone https://code.asam.net/common/asam-antora-extensions.git asam-antora-extensions
+          npm install antora vinyl
+          npm install @asciidoctor/tabs @springio/antora-extensions
 
-      - name: Patch vinyl resolution in ASAM extension
+      # ───────────────────────────────────────────────────────────────
+      # 2) Clone ASAM extension and install its own dependencies
+      # ───────────────────────────────────────────────────────────────
+      - name: Clone ASAM Antora extension
+        run: git clone https://code.asam.net/common/asam-antora-extensions.git asam-antora-extensions
+
+      - name: Install ASAM extension dependencies
+        working-directory: asam-antora-extensions
         run: |
-          sed -i "s|require('vinyl')|require(require.resolve(\\\"vinyl\\\", { paths: \[process.cwd\(\)\] }))|" asam-antora-extensions/core/file.js
+          # If the extension has a package.json, use it; otherwise install needed libs directly
+          if [ -f package.json ]; then
+            npm install
+          else
+            npm install jsdom xml2js cheerio xregexp
+          fi
 
-      - name: Install Antora extensions, etc.
+      # ───────────────────────────────────────────────────────────────
+      # 3) Duplicate the ASAM deps into Antora’s hard-coded search path
+      #    (/usr/src/app/node_modules) so user-require can resolve them
+      # ───────────────────────────────────────────────────────────────
+      - name: Copy extension deps to /usr/src/app/node_modules
         run: |
-          npm i @asciidoctor/tabs
-          npm i @springio/antora-extensions
+          sudo mkdir -p /usr/src/app/node_modules
+          sudo cp -r asam-antora-extensions/node_modules/* /usr/src/app/node_modules/
 
-      - name: Install vinyl and run Antora
+      # ───────────────────────────────────────────────────────────────
+      # 4) Run Antora
+      # ───────────────────────────────────────────────────────────────
+      - name: Build docs with Antora
         run: npx antora antora-playbook.yml
 
-      - name: Compress Documentation
+      # ───────────────────────────────────────────────────────────────
+      # 5) Zip and upload the generated site
+      # ───────────────────────────────────────────────────────────────
+      - name: Zip site
         working-directory: ${{ env.site_path }}
         run: zip -r ${{ env.site_zip }} .
 
