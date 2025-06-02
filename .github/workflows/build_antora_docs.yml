@@ -11,56 +11,52 @@ jobs:
     timeout-minutes: 7
 
     steps:
+      # ──────────────────────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18
+      # ──────────────────────────────────────────────────────────────
+      # 1.  Node & global JS deps (Antora + UI/tab extensions)
+      # ──────────────────────────────────────────────────────────────
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # ───────────────────────────────────────────────────────────────
-      # 1) Install Antora + global extensions in repo’s node_modules
-      # ───────────────────────────────────────────────────────────────
-      - name: Install Antora and global JS deps
+      - name: Install top-level JS dependencies
         run: |
-          npm install antora vinyl
-          npm install @asciidoctor/tabs @springio/antora-extensions
+          npm install antora                       \
+                      @asciidoctor/tabs            \
+                      @springio/antora-extensions
 
-      # ───────────────────────────────────────────────────────────────
-      # 2) Clone ASAM extension and install its own dependencies
-      # ───────────────────────────────────────────────────────────────
+      # ──────────────────────────────────────────────────────────────
+      # 2.  Clone the ASAM Antora Doxygen extension
+      # ──────────────────────────────────────────────────────────────
       - name: Clone ASAM Antora extension
         run: git clone https://code.asam.net/common/asam-antora-extensions.git asam-antora-extensions
 
-      - name: Install ASAM extension dependencies
-        working-directory: asam-antora-extensions
+      # ──────────────────────────────────────────────────────────────
+      # 3.  Install the extension’s own dependencies (vinyl, jsdom…)
+      #     right inside its folder
+      # ──────────────────────────────────────────────────────────────
+      - name: Install extension-local dependencies
         run: |
-          # If the extension has a package.json, use it; otherwise install needed libs directly
-          if [ -f package.json ]; then
-            npm install
-          else
-            npm install jsdom xml2js cheerio xregexp
-          fi
+          cd asam-antora-extensions
+          npm install        # reads the extension’s package.json
+          cd ..
 
-      # ───────────────────────────────────────────────────────────────
-      # 3) Duplicate the ASAM deps into Antora’s hard-coded search path
-      #    (/usr/src/app/node_modules) so user-require can resolve them
-      # ───────────────────────────────────────────────────────────────
-      - name: Copy extension deps to /usr/src/app/node_modules
-        run: |
-          sudo mkdir -p /usr/src/app/node_modules
-          sudo cp -r asam-antora-extensions/node_modules/* /usr/src/app/node_modules/
-
-      # ───────────────────────────────────────────────────────────────
-      # 4) Run Antora
-      # ───────────────────────────────────────────────────────────────
-      - name: Build docs with Antora
+      # ──────────────────────────────────────────────────────────────
+      # 4.  Build docs.  NODE_PATH tells Node/Antora to also look in
+      #     both node_modules trees when resolving requires.
+      # ──────────────────────────────────────────────────────────────
+      - name: Run Antora
+        env:
+          NODE_PATH: ${{ github.workspace }}/node_modules:${{ github.workspace }}/asam-antora-extensions/node_modules
         run: npx antora antora-playbook.yml
 
-      # ───────────────────────────────────────────────────────────────
-      # 5) Zip and upload the generated site
-      # ───────────────────────────────────────────────────────────────
+      # ──────────────────────────────────────────────────────────────
+      # 5.  Zip and upload the generated site
+      # ──────────────────────────────────────────────────────────────
       - name: Zip site
         working-directory: ${{ env.site_path }}
         run: zip -r ${{ env.site_zip }} .
