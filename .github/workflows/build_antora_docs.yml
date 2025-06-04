@@ -25,10 +25,11 @@ jobs:
       - name: Clone ASAM extensions
         run: git clone https://github.com/aljazfrancic/asam-antora-extensions.git
 
-      - name: npm init
-        run: npm init asam-antora-extensions ./asam-antora-extensions
+      - name: Make ASAM extensions npm package locally
+        working-directory: ./asam-antora-extensions
+        run: npm init -y
 
-      - name: Install Antora extensions
+      - name: Install extensions
         run: |
           npm i @asciidoctor/tabs
           npm i @springio/antora-extensions
