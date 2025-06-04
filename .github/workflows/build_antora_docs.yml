@@ -36,6 +36,7 @@ jobs:
             "vinyl": "^3.0.0",
             "@asciidoctor/tabs": "1.0.0-beta.6",
             "@springio/antora-extensions": "1.14.4",
+            "@springio/antora-extensions/tabs-migration-extension" : "1.14.4",
             "asam-antora-extensions": "file:./asam-antora-extensions"
           }' package.json > package.json.tmp && mv package.json.tmp package.json
           npm install
