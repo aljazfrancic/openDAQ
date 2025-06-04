@@ -30,21 +30,17 @@ jobs:
       - name: Create root package.json and install all dependencies
         run: |
           npm install \
-          adm-zip \
-          bibtex \
-          citeproc \
-          @citation-js/plugin-bibtex/node_modules/@citation-js/core \
-          @citation-js/plugin-bibtex \
-          xmlhttprequest \
-          jsdom \
-          child_process \
-          jquery \
-          @antora/logger \
-          vinyl \
-          antora \
-          @asciidoctor/tabs \
-          @springio/asciidoctor-extensions \
-          ./asam-antora-extensions
+            antora \
+            vinyl \
+            jsdom \
+            adm-zip \
+            citeproc \
+            "@citation-js/core" \
+            "@citation-js/plugin-bibtex" \
+            "@asciidoctor/tabs" \
+            "@springio/asciidoctor-extensions" \
+            ./asam-antora-extensions
+
 
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
