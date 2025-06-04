@@ -31,6 +31,8 @@ jobs:
         run: |
           npm init -y
           npm install \
+            @citation-js/plugin-bibtex \
+            citeproc \
             antora \
             vinyl \
             jsdom \
