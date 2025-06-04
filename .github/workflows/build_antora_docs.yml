@@ -45,7 +45,7 @@ jobs:
           sed -i -E \
             "s|@citation-js/plugin-bibtex/node_modules/@citation-js/core|@citation-js/core|g" \
             asam-antora-extensions/antora/bibliography/bibliography_csl.js
-
+        
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
 
