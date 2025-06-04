@@ -20,9 +20,6 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install Antora
-        run: npm i antora
-
       - name: Clone ASAM extensions
         run: git clone https://github.com/aljazfrancic/asam-antora-extensions.git
 
@@ -30,13 +27,17 @@ jobs:
         working-directory: ./asam-antora-extensions
         run: npm init -y
 
-      - name: Initialize root npm package and install dependencies
+      - name: Create root package.json and install all dependencies
         run: |
           npm init -y
-          npm install vinyl
-          npm install @asciidoctor/tabs
-          npm install @springio/antora-extensions
-          npm install ./asam-antora-extensions
+          jq '.dependencies += {
+            "antora": "^3.1.10",
+            "vinyl": "^3.0.0",
+            "@asciidoctor/tabs": "^1.0.0",
+            "@springio/antora-extensions": "^1.0.0",
+            "asam-antora-extensions": "file:./asam-antora-extensions"
+          }' package.json > package.json.tmp && mv package.json.tmp package.json
+          npm install
 
       - name: Run Antora
         run: npx antora antora-playbook.yml
