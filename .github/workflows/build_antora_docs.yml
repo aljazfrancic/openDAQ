@@ -30,19 +30,16 @@ jobs:
       - name: Create root package.json and install all dependencies
         run: |
           npm init -y
-          jq '.dependencies += {
-            "jsdom":, "^26.1.0",
-            "antora": "^3.1.10",
-            "vinyl": "^3.0.0",
-            "@asciidoctor/tabs": "1.0.0-beta.6",
-            "@springio/antora-extensions": "1.14.4",
-            "@springio/antora-extensions/tabs-migration-extension" : "1.14.4",
-            "asam-antora-extensions": "file:./asam-antora-extensions"
-          }' package.json > package.json.tmp && mv package.json.tmp package.json
-          npm install
+          npm install \
+            antora@^3.1.10 \
+            vinyl@^3.0.0 \
+            jsdom@^26.1.0 \
+            @asciidoctor/tabs@1.0.0-beta.6 \
+            @springio/asciidoctor-extensions \
+            ./asam-antora-extensions
 
       - name: Run Antora
-        run: npx antora antora-playbook.yml
+        run: npx antora antora-playbook.yml --stacktrace
 
       - name: Compress Documentation
         working-directory: ${{ env.site_path }}
