@@ -5,6 +5,7 @@ on:
 env:
   site_path: ${{ github.workspace }}/build/site/
   site_zip: ${{ github.workspace }}/build/user_guide.zip
+
 jobs:
   build_documentation:
     runs-on: ubuntu-22.04
@@ -25,19 +26,21 @@ jobs:
       - name: Clone ASAM extensions
         run: git clone https://github.com/aljazfrancic/asam-antora-extensions.git
 
-      - name: Make ASAM extensions npm package locally
+      - name: Initialize ASAM extensions as an npm package
         working-directory: ./asam-antora-extensions
-        run: npm init -y
-
-      - name: Install extensions
         run: |
-          npm i @asciidoctor/tabs
-          npm i @springio/antora-extensions
-          npm i ./asam-antora-extensions
+          npm init -y
+          npm install
+
+      - name: Install root dependencies and local ASAM extensions
+        run: |
+          npm install vinyl
+          npm install @asciidoctor/tabs
+          npm install @springio/antora-extensions
+          npm install ./asam-antora-extensions
 
       - name: Run Antora
-        run: >
-          npx antora antora-playbook.yml
+        run: npx antora antora-playbook.yml
 
       - name: Compress Documentation
         working-directory: ${{ env.site_path }}
