@@ -13,7 +13,8 @@ asciidoc:
 
 antora:
   extensions:
-    - require: './asam-antora-extensions/asam-antora_extension.js'
+    - require: "@springio/antora-extensions/tabs-migration-extension"
+    - require: "./asam-antora-extensions/asam-antora_extension.js"
       doxygen: true
 
 content:
