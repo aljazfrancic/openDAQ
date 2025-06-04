@@ -31,6 +31,7 @@ jobs:
         run: |
           npm init -y
           jq '.dependencies += {
+            "jsdom":, "^26.1.0",
             "antora": "^3.1.10",
             "vinyl": "^3.0.0",
             "@asciidoctor/tabs": "1.0.0-beta.6",
