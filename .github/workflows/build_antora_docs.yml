@@ -31,12 +31,13 @@ jobs:
         run: |
           npm init -y
           npm install \
+            @citation-js/core \
             @citation-js/plugin-bibtex \
             citeproc \
-            antora \
-            vinyl \
-            jsdom \
-            @asciidoctor/tabs \
+            antora@^3.1.10 \
+            vinyl@^3.0.0 \
+            jsdom@^26.1.0 \
+            @asciidoctor/tabs@1.0.0-beta.6 \
             @springio/asciidoctor-extensions \
             ./asam-antora-extensions
 
