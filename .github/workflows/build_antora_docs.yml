@@ -35,12 +35,10 @@ jobs:
             jsdom \
             adm-zip \
             citeproc \
-            "@citation-js/core" \
-            "@citation-js/plugin-bibtex" \
+            citation-js \
             "@asciidoctor/tabs" \
             "@springio/asciidoctor-extensions" \
-            ./asam-antora-extensions
-
+            ./asam-antora-extensions 
 
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
