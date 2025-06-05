@@ -24,7 +24,7 @@ jobs:
         run: |
           cd docs/Doxygen
           doxygen -g
-          mv Doxyfile Doxyfile/Doxyfile
+          ls
 
       - name: Install Node.js
         uses: actions/setup-node@v4
