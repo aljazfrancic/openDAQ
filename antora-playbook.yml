@@ -8,9 +8,6 @@ asciidoc:
     gpp: g++
     docs-prefix: docs
     docs-website: https://{docs-prefix}.opendaq.com/
-    doxygenUse:
-      generator: antora-apidocs-extension
-      doxygenFile: docs/Doxygen/Doxyfile.in
   extensions:
     - "@asciidoctor/tabs"
         
@@ -31,7 +28,7 @@ antora:
           index_filename: index.html
           api_docs_link_text: "Reference"
           specialty_files:
-            - file_name: Doxyfile
+            - file_name: docs/Doxygen/Doxyfile.in
               is_required: true
               is_common_capable: true
               common_file_path: docs/Doxygen/Doxyfile.in
