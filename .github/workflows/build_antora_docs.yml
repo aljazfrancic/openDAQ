@@ -39,6 +39,8 @@ jobs:
             citation-js \
             "@asciidoctor/tabs" \
             "@springio/asciidoctor-extensions" \
+            "@springio/antora-extensions" \
+            "@antora/lunr-extension" \
             ./asam-antora-extensions 
           
           # Now fix the one bad require in bibliography_csl.js:
