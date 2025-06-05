@@ -8,9 +8,12 @@ asciidoc:
     gpp: g++
     docs-prefix: docs
     docs-website: https://{docs-prefix}.opendaq.com/
+    doxygenUse:
+      generator: antora-apidocs-extension
+      doxygenFile: docs/Doxygen/Doxyfile.in
   extensions:
     - "@asciidoctor/tabs"
-
+        
 antora:
   extensions:
     - require: "@antora/lunr-extension" 
