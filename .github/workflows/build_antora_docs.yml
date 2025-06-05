@@ -15,58 +15,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Doxygen documentation dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends doxygen graphviz wget zip
-
-      - name: String replace
-        run: |
-          cd docs/Doxygen
-          python doxyfile_fill.py
-
-      - name: Run Doxygen
-        run: doxygen docs/Doxygen/Doxyfile.in
-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Clone ASAM extensions
-        run: git clone https://github.com/aljazfrancic/asam-antora-extensions.git
+      - name: Install Antora
+        run: npm i antora
 
-      - name: Initialize package.json in asam-antora-extensions
-        working-directory: ./asam-antora-extensions
-        run: npm init -y
-
-      - name: Create root package.json and install all dependencies
+      - name: Install Antora extensions
         run: |
-          npm install \
-            xmlhttprequest \
-            antora \
-            vinyl \
-            jsdom \
-            adm-zip \
-            citeproc \
-            citation-js \
-            "@asciidoctor/tabs" \
-            "@springio/asciidoctor-extensions" \
-            "@springio/antora-extensions" \
-            "@antora/lunr-extension" \
-            ./asam-antora-extensions 
-          
-          # Now fix the one bad require in bibliography_csl.js:
-          sed -i -E \
-            "s|@citation-js/plugin-bibtex/node_modules/@citation-js/core|@citation-js/core|g" \
-            asam-antora-extensions/antora/bibliography/bibliography_csl.js
-        
+          npm i @asciidoctor/tabs
+          npm i @springio/antora-extensions
+          npm i @antora/lunr-extension
+          npm i antora-apidocs-extension
+
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
 
       - name: ls
         run: ls
-        
+
       - name: tree
         run: tree
 

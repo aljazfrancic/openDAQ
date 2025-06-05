@@ -16,8 +16,6 @@ antora:
     - require: "@antora/lunr-extension"
       index_latest_only: true
     - require: "@springio/antora-extensions/tabs-migration-extension"
-    - require: "./asam-antora-extensions/asam-antora_extension.js"
-      doxygen: true
 
 content:
   sources:

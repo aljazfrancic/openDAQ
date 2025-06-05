@@ -12,3 +12,7 @@ nav:
 - modules/howto_guides/nav-howto-guides.adoc
 - modules/explanations/nav-explanations.adoc
 - modules/reference/nav-reference.adoc
+extensions:
+  api_docs_generator:
+    doxygen:
+      enabled: true
