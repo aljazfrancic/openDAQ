@@ -18,7 +18,7 @@ jobs:
       - name: Install Doxygen documentation dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends doxygen graphviz wget zip
+          sudo apt-get install -y --no-install-recommends doxygen graphviz
 
       - name: String replace
         run: |
