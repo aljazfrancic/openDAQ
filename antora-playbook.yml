@@ -31,7 +31,7 @@ antora:
             - file_name: Doxyfile
               is_required: true
               is_common_capable: true
-              common_file_path: docs/Doxygen
+              common_file_path: docs/Doxygen/Doxyfile.in
 
 content:
   sources:
