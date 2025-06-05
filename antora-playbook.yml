@@ -28,10 +28,10 @@ antora:
           index_filename: index.html
           api_docs_link_text: "Reference"
           specialty_files:
-            - file_name: docs/Doxygen/Doxyfile.in
+            - file_name: docs/Doxygen/Doxyfile
               is_required: true
               is_common_capable: true
-              common_file_path: docs/Doxygen/Doxyfile.in
+              common_file_path: docs/Doxygen/Doxyfile
 
 content:
   sources:
