@@ -28,7 +28,13 @@ jobs:
           npm i @asciidoctor/tabs
           npm i @springio/antora-extensions
           npm i @antora/lunr-extension
-          npm i antora-apidocs-extension
+          npm i git+https://gitlab.com/scphantm/antora-apidocs-extension.git
+          npm i glob-stream
+
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen
 
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
