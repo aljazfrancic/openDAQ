@@ -64,6 +64,9 @@ jobs:
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
 
+      - name: tree
+        run: tree
+
       - name: Compress Documentation
         working-directory: ${{ env.site_path }}
         run: zip -r ${{ env.site_zip }} .
