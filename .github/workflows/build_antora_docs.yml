@@ -41,7 +41,7 @@ jobs:
             glob-stream
 
       - name: Run Antora
-        run: npx antora antora-playbook.yml --stacktrace
+        run: npx antora antora-playbook.yml --stacktrace --log-level debug
 
       - name: Compress Documentation
         working-directory: ${{ env.site_path }}
