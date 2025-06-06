@@ -3,6 +3,7 @@ site:
   start_page: opendaq::introduction.adoc
 asciidoc:
   attributes:
+    doxygen_source_folder: "../../../src"  # Relative path to source code
     page-pagination: true
     tabs-sync-option: true
     gpp: g++
@@ -17,6 +18,12 @@ antora:
       index_latest_only: true
     - require: "@springio/antora-extensions/tabs-migration-extension"
     - require: "./asam-antora-extensions/asam-antora_extension.js"
+      options:
+        doxygen:
+          xmlDir: './build/doxygen/xml'  # Path to Doxygen XML output
+          componentName: 'reference'     # Must match your antora.yml name
+          module: 'reference'            # Must match your module directory
+          version: 'dev'                 # Explicit version matching antora.yml
       doxygen: true
 
 content:
