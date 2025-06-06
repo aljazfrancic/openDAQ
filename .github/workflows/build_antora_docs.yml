@@ -20,6 +20,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y doxygen graphviz
 
+      - name: Verify Doxygen location
+        run: |
+          which doxygen
+          ls -l $(which doxygen)
+
       # Ensure directory exists and verify Doxyfile generation
       - name: Generate and verify Doxyfile
         run: |
