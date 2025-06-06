@@ -1,7 +1,6 @@
 site:
   title: openDAQ
   start_page: opendaq::introduction.adoc
-
 asciidoc:
   attributes:
     page-pagination: true
@@ -15,32 +14,27 @@ asciidoc:
 antora:
   extensions:
     - require: "@antora/lunr-extension"
+      index_latest_only: true
     - require: "@springio/antora-extensions/tabs-migration-extension"
     - require: "antora-apidocs-extension"
-
-api_docs_generator:
-  doxygen:
-    code_directory: core
-    doxygen_path: /usr/bin/doxygen
-    working_path: /tmp
-    output_files_destination: modules/reference
-    output_files_build_dir: build
-    attachment_dir: cdoc
-    index_filename: index.html
-    api_docs_link_text: "Reference"
-    specialty_files:
-      - file_name: Doxyfile
-        is_required: true
-        is_common_capable: true
-        common_file_path: /doxyfiles/Doxyfile
+      api_docs_generator:
+        doxygen:
+          code_directory: core
+          doxygen_path: /usr/bin/doxygen
+          working_path: /tmp
+          output_files_destination: "docs/Antora/modules/reference"
+          output_files_build_dir: build
+          attachment_dir: cdoc
+          index_filename: index.html
+          api_docs_link_text: "Reference"
+        source: "docs/Doxygen"
+        output: doxygen
 
 content:
   sources:
     - url: .
       branches: HEAD
-      start_paths:
-        - docs/Antora
-        - docs/Antora-specs
+      start_paths: docs/Antora, docs/Antora-specs
 
 ui:
   bundle:
