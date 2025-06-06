@@ -1,8 +1,8 @@
 name: reference
-title: Reference
 version: "dev"
 
 asciidoc:
   attributes:
     doxygen_source_folder: "../../../../xml"
+    doxygen_source_repo: ""
     doxygen_module: "reference"
