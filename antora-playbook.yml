@@ -3,35 +3,33 @@ site:
   start_page: opendaq::introduction.adoc
 asciidoc:
   attributes:
-    doxygen_source_folder: "../../../src"  # Relative path to source code
+    doxygen_source_folder: "../../../src"
     page-pagination: true
     tabs-sync-option: true
     gpp: g++
     docs-prefix: docs
-    docs-website: https://{docs-prefix}.opendaq.com/
+    docs-website: "https://{docs-prefix}.opendaq.com/"
   extensions:
     - "@asciidoctor/tabs"
-
-antora:
-  extensions:
-    - require: "@antora/lunr-extension" 
-      index_latest_only: true
-    - require: "@springio/antora-extensions/tabs-migration-extension"
-    - require: "./asam-antora-extensions/asam-antora_extension.js"
-      options:
-        doxygen:
-          xmlDir: './build/doxygen/xml'  # Path to Doxygen XML output
-          componentName: 'reference'     # Must match your antora.yml name
-          module: 'reference'            # Must match your module directory
-          version: 'dev'                 # Explicit version matching antora.yml
-      doxygen: true
-
+extensions:
+  - require: "@antora/lunr-extension"
+    index_latest_only: true
+  - require: "@springio/antora-extensions/tabs-migration-extension"
+  - require: "./asam-antora-extensions/asam-antora_extension.js"
+    options:
+      doxygen:
+        xmlDir: "./xml"
+        componentName: "reference"
+        module: "reference"
+        version: "dev"
 content:
   sources:
-  - url: .
-    branches: HEAD
-    start_paths: docs/Antora, docs/Antora-specs
+    - url: .
+      branches: HEAD
+      start_paths: 
+        - docs/Antora
+        - docs/Antora-specs
 ui:
   bundle:
-    url: https://github.com/openDAQ/antora-ui-spring/releases/download/1.11-opendaq/ui-bundle.zip
+    url: "https://github.com/openDAQ/antora-ui-spring/releases/download/1.11-opendaq/ui-bundle.zip"
     snapshot: true
