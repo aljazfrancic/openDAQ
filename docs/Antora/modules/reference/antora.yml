@@ -4,5 +4,5 @@ version: "dev"
 
 asciidoc:
   attributes:
+    doxygen_source_folder: "../../../xml"
     doxygen_module: "reference"
-    doxygen_source_folder: "core"
