@@ -15,38 +15,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Doxygen documentation dependencies
+      - name: Install Doxygen
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends doxygen graphviz
+          sudo apt-get install -y doxygen graphviz
 
-      - name: Generate Doxyfile
+      # Ensure directory exists and verify Doxyfile generation
+      - name: Generate and verify Doxyfile
         run: |
+          mkdir -p docs/Doxygen
           cd docs/Doxygen
-          doxygen -g
-          ls
+          doxygen -g Doxyfile  # Explicitly specify filename
+          ls -la  # Verify file creation
+          pwd  # Show current path
+          test -f Doxyfile && echo "Doxyfile exists" || echo "Doxyfile missing"
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Antora
-        run: npm i antora
-
-      - name: Install Antora extensions
+      - name: Install Antora and extensions
         run: |
-          npm i @asciidoctor/tabs
-          npm i @springio/antora-extensions
-          npm i @antora/lunr-extension
-          npm i git+https://gitlab.com/scphantm/antora-apidocs-extension.git
-          npm i glob-stream
+          npm install \
+            antora \
+            @asciidoctor/tabs \
+            @springio/antora-extensions \
+            @antora/lunr-extension \
+            git+https://gitlab.com/scphantm/antora-apidocs-extension.git \
+            glob-stream
 
-      - name: ls
-        run: ls
-
-      - name: tree
-        run: tree
+      # Add debug step to verify file structure
+      - name: Verify repository structure
+        run: |
+          tree -L 3 docs/Doxygen
+          test -f docs/Doxygen/Doxyfile && echo "Doxyfile found" || echo "Doxyfile missing"
 
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
