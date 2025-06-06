@@ -17,10 +17,9 @@ antora:
       index_latest_only: true
     - require: "@springio/antora-extensions/tabs-migration-extension"
     - require: 'antora-apidocs-extension'
-      api_docs_generator:
-        with:
-          source: docs/Doxygen  # Must match your Doxyfile location
-          output: doxygen
+      with:
+        source: docs/Doxygen
+        output: doxygen
         doxygen:
           code_directory: core
           doxygen_path: /usr/bin/doxygen
@@ -30,11 +29,6 @@ antora:
           attachment_dir: cdoc
           index_filename: index.html
           api_docs_link_text: "Reference"
-          specialty_files:
-            - file_name: docs/Doxygen/Doxyfile
-              is_required: true
-              is_common_capable: true
-              common_file_path: docs/Doxygen/Doxyfile
 
 content:
   sources:
