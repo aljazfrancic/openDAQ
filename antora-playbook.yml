@@ -20,7 +20,11 @@ antora:
       api_docs_generator:
         doxygen:
           doxygen_path: /usr/bin/doxygen
-          doxygen_config_file: "Doxyfile"  # Relative to source directory
+          specialty_files:
+            - file_name: Doxyfile
+              is_required: true
+              is_common_capable: true
+              common_file_path: Doxyfile
         source: "."
         output: doxygen
 
