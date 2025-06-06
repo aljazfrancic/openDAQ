@@ -21,15 +21,11 @@ jobs:
 
       - name: Generate Doxyfile
         run: |
-          # Create docs/Doxygen and write a minimal config.
-          mkdir -p docs/Doxygen
-          cat > docs/Doxygen/Doxyfile <<'EOF'
-          PROJECT_NAME           = "openDAQ"
-          OUTPUT_DIRECTORY       = build
-          GENERATE_XML           = YES
-          INPUT                  = ../../core
-          RECURSIVE              = YES
-          EOF
+          cd docs/Doxygen
+          python doxyfile_fill.py
+          cp Doxyfile.in Doxyfile
+          ls
+          cat Doxyfile
 
       - name: Install Node.js
         uses: actions/setup-node@v4
