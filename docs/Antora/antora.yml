@@ -7,6 +7,9 @@ asciidoc:
     page-toclevels: 3@
     experimental: true
     version: "dev"
+    doxygen_source_folder: "../xml"
+    doxygen_module: "reference"
+
 nav:
 - modules/tutorials/nav-tutorials.adoc
 - modules/howto_guides/nav-howto-guides.adoc
