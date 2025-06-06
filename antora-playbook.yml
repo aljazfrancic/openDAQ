@@ -4,7 +4,7 @@ site:
 
 asciidoc:
   attributes:
-    doxygen_source_folder: "../../../src"
+    doxygen_source_folder: "core"
     page-pagination: true
     tabs-sync-option: true
     gpp: g++
