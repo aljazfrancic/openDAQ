@@ -20,7 +20,7 @@ antora:
     - require: "./asam-antora-extensions/asam-antora_extension.js"
       options:
         doxygen:
-          xmlDir: "./xml"
+          xmlDir: "./xmlX"
           componentName: 'reference'
           module: 'reference'
           version: 'dev'
