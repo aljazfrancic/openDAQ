@@ -18,6 +18,9 @@ antora:
     - require: "@springio/antora-extensions/tabs-migration-extension"
     - require: 'antora-apidocs-extension'
       api_docs_generator:
+        with:
+          source: docs/Doxygen  # Must match your Doxyfile location
+          output: doxygen
         doxygen:
           code_directory: core
           doxygen_path: /usr/bin/doxygen
