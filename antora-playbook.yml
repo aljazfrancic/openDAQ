@@ -19,8 +19,9 @@ antora:
     - require: "antora-apidocs-extension"
       api_docs_generator:
         doxygen:
-          code_directory: core
           doxygen_path: /usr/bin/doxygen
+          doxygen_config_file: "Doxyfile"
+          code_directory: core
           working_path: /tmp
           output_files_destination: "docs/Antora/modules/reference"
           output_files_build_dir: build

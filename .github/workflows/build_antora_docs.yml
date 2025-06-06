@@ -9,7 +9,6 @@ env:
 jobs:
   build_documentation:
     runs-on: ubuntu-22.04
-    name: Build SDK Documentation
     timeout-minutes: 5
     steps:
       - name: Checkout repository
@@ -20,20 +19,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y doxygen graphviz
 
-      - name: Verify Doxygen location
+      - name: Generate Doxyfile
         run: |
-          which doxygen
-          ls -l $(which doxygen)
-
-      # Ensure directory exists and verify Doxyfile generation
-      - name: Generate and verify Doxyfile
-        run: |
+          # Create docs/Doxygen and write a minimal config.
           mkdir -p docs/Doxygen
-          cd docs/Doxygen
-          doxygen -g Doxyfile  # Explicitly specify filename
-          ls -la  # Verify file creation
-          pwd  # Show current path
-          test -f Doxyfile && echo "Doxyfile exists" || echo "Doxyfile missing"
+          cat > docs/Doxygen/Doxyfile <<'EOF'
+          PROJECT_NAME           = "openDAQ"
+          OUTPUT_DIRECTORY       = build
+          GENERATE_XML           = YES
+          INPUT                  = ../../core
+          RECURSIVE              = YES
+          EOF
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -49,12 +45,6 @@ jobs:
             @antora/lunr-extension \
             git+https://gitlab.com/scphantm/antora-apidocs-extension.git \
             glob-stream
-
-      # Add debug step to verify file structure
-      - name: Verify repository structure
-        run: |
-          tree -L 3 docs/Doxygen
-          test -f docs/Doxygen/Doxyfile && echo "Doxyfile found" || echo "Doxyfile missing"
 
       - name: Run Antora
         run: npx antora antora-playbook.yml --stacktrace
