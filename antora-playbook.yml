@@ -21,7 +21,7 @@ antora:
       options:
         doxygen:
           xmlDir: "./xml"
-          outputDir: "./output"
+          outputDir: "kek"
           componentName: 'reference'
           module: 'reference'
           version: 'dev'
