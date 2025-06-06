@@ -1,6 +1,7 @@
 site:
   title: openDAQ
   start_page: opendaq::introduction.adoc
+
 asciidoc:
   attributes:
     doxygen_source_folder: "../../../src"
@@ -11,25 +12,27 @@ asciidoc:
     docs-website: "https://{docs-prefix}.opendaq.com/"
   extensions:
     - "@asciidoctor/tabs"
-antora:
-  extensions:
-    - require: "@antora/lunr-extension"
-      index_latest_only: true
-    - require: "@springio/antora-extensions/tabs-migration-extension"
-    - require: "./asam-antora-extensions/asam-antora_extension.js"
-      options:
-        doxygen:
-          xmlDir: "./xml"
-          componentName: "reference"
-          module: "reference"
-          version: "dev"
+
+extensions:
+  - require: "@antora/lunr-extension"
+    index_latest_only: true
+  - require: "@springio/antora-extensions/tabs-migration-extension"
+  - require: "./asam-antora-extensions/asam-antora_extension.js"
+    options:
+      doxygen:
+        xmlDir: "./xml"
+        componentName: "reference"
+        module: "reference"
+        version: "dev"
+
 content:
   sources:
     - url: .
       branches: HEAD
-      start_paths: 
+      start_path:
         - docs/Antora
         - docs/Antora-specs
+
 ui:
   bundle:
     url: "https://github.com/openDAQ/antora-ui-spring/releases/download/1.11-opendaq/ui-bundle.zip"
