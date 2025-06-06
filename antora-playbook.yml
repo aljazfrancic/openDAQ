@@ -21,7 +21,7 @@ antora:
         doxygen:
           doxygen_path: /usr/bin/doxygen
           doxygen_config_file: "Doxyfile"  # Relative to source directory
-        source: "docs/Doxygen"
+        source: "."
         output: doxygen
 
 content:

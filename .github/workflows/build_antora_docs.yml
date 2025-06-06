@@ -23,10 +23,7 @@ jobs:
         run: |
           cd docs/Doxygen
           python doxyfile_fill.py
-          cp Doxyfile.in Doxyfile
-          # Verify Doxyfile exists
-          ls -l
-          cat Doxyfile
+          cp Doxyfile.in ../../Doxyfile
 
       - name: Install Node.js
         uses: actions/setup-node@v4
