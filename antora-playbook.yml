@@ -21,12 +21,9 @@ antora:
       options:
         doxygen:
           xmlDir: "./xml"
-          outputDir: "kek"
           componentName: 'reference'
           module: 'reference'
           version: 'dev'
-          forceGeneration: true  # NEW: Force processing
-          logLevel: verbose     # NEW: Detailed logging
 content:
   sources:
     - url: .
