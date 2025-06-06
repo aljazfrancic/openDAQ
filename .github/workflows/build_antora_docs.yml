@@ -27,6 +27,11 @@ jobs:
           ls
           cat Doxyfile
 
+      - name: Update Antora playbook with Doxyfile path
+        run: |
+          # Replace placeholder with absolute path to Doxyfile
+          sed -i "s|doxygen_config_file: .*|doxygen_config_file: \"$GITHUB_WORKSPACE/docs/Doxygen/Doxyfile\"|" antora-playbook.yml
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
