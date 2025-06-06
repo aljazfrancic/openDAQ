@@ -2,9 +2,6 @@ name: reference
 title: Reference
 version: "dev"
 
-nav:
-  - modules/ROOT/nav.adoc
-
 asciidoc:
   attributes:
     doxygen_module: "Reference"
