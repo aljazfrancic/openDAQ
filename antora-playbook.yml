@@ -1,7 +1,6 @@
 site:
   title: openDAQ
   start_page: opendaq::introduction.adoc
-
 asciidoc:
   attributes:
     doxygen_source_folder: "core"
@@ -10,9 +9,9 @@ asciidoc:
     gpp: g++
     docs-prefix: docs
     docs-website: "https://{docs-prefix}.opendaq.com/"
+    doxygen_debug: true  # NEW: Enable debug output
   extensions:
     - "@asciidoctor/tabs"
-
 antora:
   extensions:
     - require: "@antora/lunr-extension"
@@ -22,18 +21,19 @@ antora:
       options:
         doxygen:
           xmlDir: "./xml"
-          componentName: "reference"
-          module: "reference"
-          version: "dev"
-
+          outputDir: "./output"
+          componentName: 'reference'
+          module: 'reference'
+          version: 'dev'
+          forceGeneration: true  # NEW: Force processing
+          logLevel: verbose     # NEW: Detailed logging
 content:
   sources:
     - url: .
       branches: HEAD
-      start_paths:
+      start_paths: 
         - docs/Antora
         - docs/Antora-specs
-
 ui:
   bundle:
     url: "https://github.com/openDAQ/antora-ui-spring/releases/download/1.11-opendaq/ui-bundle.zip"
