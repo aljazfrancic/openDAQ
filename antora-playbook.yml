@@ -32,7 +32,7 @@ content:
       start_paths: 
         - docs/Antora
         - docs/Antora-specs
-        - docs/Doxygen
+
 ui:
   bundle:
     url: "https://github.com/openDAQ/antora-ui-spring/releases/download/1.11-opendaq/ui-bundle.zip"
