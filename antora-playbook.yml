@@ -19,9 +19,15 @@ antora:
     - require: "antora-apidocs-extension"
       api_docs_generator:
         doxygen:
+          code_directory: core
           doxygen_path: /usr/bin/doxygen
           doxygen_config_file: "${{ github.workspace }}/docs/Doxygen/Doxyfile"  # Use absolute path
-          # Keep other settings...
+          working_path: /tmp
+          output_files_destination: "docs/Antora/modules/reference"
+          output_files_build_dir: build
+          attachment_dir: cdoc
+          index_filename: index.html
+          api_docs_link_text: "Reference"
         source: "docs/Doxygen"
         output: doxygen
 
