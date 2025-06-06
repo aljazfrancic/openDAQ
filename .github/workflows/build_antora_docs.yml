@@ -42,14 +42,14 @@ jobs:
           npm i git+https://gitlab.com/scphantm/antora-apidocs-extension.git
           npm i glob-stream
 
-      - name: Run Antora
-        run: npx antora antora-playbook.yml --stacktrace
-
       - name: ls
         run: ls
 
       - name: tree
         run: tree
+
+      - name: Run Antora
+        run: npx antora antora-playbook.yml --stacktrace
 
       - name: Compress Documentation
         working-directory: ${{ env.site_path }}
