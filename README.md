@@ -30,7 +30,7 @@ while also embracing existing standards such as MQTT and XCP via Ethernet.
 
 - [Downloads →](https://docs.opendaq.com)
 - [User documentation →](https://opendaq.github.io/)
-- [API documentation (Doxgen) →](https://docs.opendaq.com/doxygen/index.html)
+- [API documentation (Doxygen) →](https://docs.opendaq.com/doxygen/index.html)
 
 ## Documentation
 
