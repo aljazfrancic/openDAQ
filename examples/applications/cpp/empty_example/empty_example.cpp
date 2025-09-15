@@ -12,7 +12,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     generalConfig.setPropertyValue("Username", "root");
     generalConfig.setPropertyValue("Password", "root");
 
-    auto device = instance.addDevice("daq.nd://[fe80::a00:27ff:fe07:d6d3%18]:7420/", config);  // change to your device address
+    auto device = instance.addDevice("daq.nd://[fe80::a00:27ff:fed7:494e%18]:7420/", config);  // change to your device address
 
     // Set value of all types available on existing components
     device.setPropertyValue("userName", "testUserName");  // string
@@ -26,13 +26,15 @@ int main(int /*argc*/, const char* /*argv*/[])
     assert(device.getPropertyValue("GlobalSampleRate") == 1024.3);
     assert(device.getPropertyValue("EnableCANChannel") == true);
 
-    // Procedure
+    // Function
     FunctionPtr fun = device.getPropertyValue("Protected.Sum");
     assert(fun(2, 3) == 5);
-    auto proc = Function([](IntegerPtr a, IntegerPtr b) { return a * b; });
-    // configureBasicProperty(fb, "Procedure", proc);
-    // ProcedurePtr newProc = fb.getPropertyValue("Procedure");
-    // newProc(42);
+
+    // CANNOT SET REMOTE FUNCTION PROPERTY
+    // auto proc = Function([](IntegerPtr a, IntegerPtr b) { return a * b; });
+    // device.setPropertyValue("Protected.Sum", proc);
+    // FunctionPtr newFun = device.getPropertyValue("Protected.Sum");
+    // assert(newFun(2, 3) == 6);
 
     return 0;
 }
