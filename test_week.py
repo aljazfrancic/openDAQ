@@ -34,6 +34,10 @@ assert(device.get_property_value("NumberOfChannels") == 3)
 assert(device.get_property_value("GlobalSampleRate") == 1024.3)
 assert(device.get_property_value("EnableCANChannel") == True)
 
+fun = daq.IFunction.cast_from(device.get_property_value("Protected.Sum"))
+assert(fun(2, 3) == 5)
 
+device.set_property_value("Protected.Owner", "testOwner")
+assert(device.get_property_value("Protected.Owner") == "testOwner")
 
 pass
