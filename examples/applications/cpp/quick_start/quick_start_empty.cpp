@@ -32,5 +32,8 @@ int main(int /*argc*/, const char* /*argv*/[])
     dev.setPropertyValue("Struct", stru);
     assert(dev.getPropertyValue("Struct") == stru);
 
+    dev.setPropertyValue("CoercedProp", 100);
+    assert(dev.getPropertyValue("CoercedProp") == 10);
+
     return 0;
 }

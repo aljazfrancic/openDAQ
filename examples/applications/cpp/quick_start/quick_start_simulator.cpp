@@ -52,6 +52,9 @@ int main(int /*argc*/, const char* /*argv*/[])
     const auto struProp = StructProperty("Struct", stru);
     instance.addProperty(struProp);
 
+    auto coercedProp = IntPropertyBuilder("CoercedProp", 5).setCoercer(Coercer("if(Value > 10, 10, Value)")).build();
+    instance.addProperty(coercedProp);
+
     const auto servers = instance.addStandardServers();
 
     for (const auto& server : servers)
