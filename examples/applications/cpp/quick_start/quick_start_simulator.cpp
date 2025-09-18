@@ -36,6 +36,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     auto refDevice = instance.addDevice("daqref://device0");
     refDevice.setPropertyValue("EnableProtectedChannel", true);
 
+    // Enumeration Property
     auto enumNames = List<IString>();
     enumNames.pushBack("First");
     enumNames.pushBack("Second");
@@ -46,14 +47,23 @@ int main(int /*argc*/, const char* /*argv*/[])
     auto enumProp = EnumerationProperty("Enum", enu);
     instance.addProperty(enumProp);
 
+    // Struct Property
     const auto structType = StructType("StructType", List<IString>("Int", "Float"), List<IType>(SimpleType(ctInt), SimpleType(ctFloat)));
     typeManager.addType(structType);
     const auto stru = StructBuilder("StructType", typeManager).set("Int", 5).set("Float", 5.3).build();
     const auto struProp = StructProperty("Struct", stru);
     instance.addProperty(struProp);
 
+    // Coerced Property
     auto coercedProp = IntPropertyBuilder("CoercedProp", 5).setCoercer(Coercer("if(Value > 10, 10, Value)")).build();
     instance.addProperty(coercedProp);
+
+    // Reference Property
+    instance.addProperty(IntProperty("Integer", 0));
+    instance.addProperty(StringProperty("Prop1", "foo"));
+    instance.addProperty(StringProperty("Prop2", "bar"));
+
+    instance.addProperty(ReferenceProperty("RefProp", EvalValue("switch($Integer, 0, %Prop1, 1, %Prop2)")));
 
     const auto servers = instance.addStandardServers();
 

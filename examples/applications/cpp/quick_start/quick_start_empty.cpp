@@ -23,17 +23,25 @@ int main(int /*argc*/, const char* /*argv*/[])
         }
     }
 
+    // Enumeration Property
     dev.setPropertyValue("Enum", 1);            // "Second"
     assert(dev.getPropertyValue("Enum") == 1);  // "Second"
     dev.setPropertyValue("Enum", 2);            // "Third"
     assert(dev.getPropertyValue("Enum") == 2);  // "Third"
 
+    // Struct Property
     const auto stru = StructBuilder("StructType", instance.getContext().getTypeManager()).set("Int", 4).set("Float", 4.2).build();
     dev.setPropertyValue("Struct", stru);
     assert(dev.getPropertyValue("Struct") == stru);
 
+    // Coerced Property
     dev.setPropertyValue("CoercedProp", 100);
     assert(dev.getPropertyValue("CoercedProp") == 10);
+
+    // Reference Property
+    assert(dev.getPropertyValue("RefProp") == "foo");
+    dev.setPropertyValue("Integer", 1);
+    assert(dev.getPropertyValue("RefProp") == "bar");
 
     return 0;
 }
