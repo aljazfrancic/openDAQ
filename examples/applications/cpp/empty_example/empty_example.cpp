@@ -12,7 +12,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     generalConfig.setPropertyValue("Username", "root");
     generalConfig.setPropertyValue("Password", "root");
 
-    auto device = instance.addDevice("daq.nd://[fe80::a00:27ff:fe07:d6d3%19]:7420/", config);  // change to your device address
+    auto device = instance.addDevice("daq.nd://192.168.56.128", config);  // change to your device address
 
     // Restore defaults
     device.setPropertyValue("userName", "");
@@ -52,6 +52,10 @@ int main(int /*argc*/, const char* /*argv*/[])
     device.setPropertyValue("Protected.Owner", "testOwner");
     assert(device.getPropertyValue("Protected.Owner") == "testOwner");
 
+    // StructPtr customRange = device.getChannels()[0].getPropertyValue("CustomRange");
+    auto newRange = Range(3.2, 4.3);
+    device.getChannels()[0].setPropertyValue("CustomRange", newRange);
+    assert(device.getChannels()[0].getPropertyValue("CustomRange") == newRange);
     // CANNOT SET REMOTE FUNCTION PROPERTY
     // auto proc = Function([](IntegerPtr a, IntegerPtr b) { return a * b; });
     // device.setPropertyValue("Protected.Sum", proc);
