@@ -39,9 +39,11 @@ int main(int /*argc*/, const char* /*argv*/[])
     assert(dev.getPropertyValue("CoercedProp") == 10);
 
     // Reference Property
+    dev.setPropertyValue("Integer", 0);
     assert(dev.getPropertyValue("RefProp") == "foo");
     dev.setPropertyValue("Integer", 1);
     assert(dev.getPropertyValue("RefProp") == "bar");
+    dev.setPropertyValue("Integer", 0);
 
     return 0;
 }

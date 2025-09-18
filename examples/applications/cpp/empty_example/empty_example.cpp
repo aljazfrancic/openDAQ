@@ -56,6 +56,7 @@ int main(int /*argc*/, const char* /*argv*/[])
     auto newRange = Range(3.2, 4.3);
     device.getChannels()[0].setPropertyValue("CustomRange", newRange);
     assert(device.getChannels()[0].getPropertyValue("CustomRange") == newRange);
+
     // CANNOT SET REMOTE FUNCTION PROPERTY
     // auto proc = Function([](IntegerPtr a, IntegerPtr b) { return a * b; });
     // device.setPropertyValue("Protected.Sum", proc);
