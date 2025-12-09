@@ -162,6 +162,15 @@ jobs:
         working-directory: ./build
         run: cpack -C ${{ matrix.cmake_build_type }} -G ${{ matrix.cpack }}
 
+      - name: Generate SBOM from package
+        if: matrix.cpack != ''
+        uses: anchore/sbom-action@v0
+        with:
+          path: ${{ env.package_path }}
+          format: spdx-json
+          output-file: "opendaq-${{ matrix.name }}.spdx.json"
+          upload-artifact: true
+
       - name: Upload package
         if: matrix.cpack != ''
         uses: actions/upload-artifact@v4
@@ -347,6 +356,15 @@ jobs:
         if: matrix.cpack != ''
         working-directory: ./build
         run: cpack -C ${{ matrix.cmake_build_type }} -G ${{ matrix.cpack }}
+
+      - name: Generate SBOM from package
+        if: matrix.cpack != ''
+        uses: anchore/sbom-action@v0
+        with:
+          path: ${{ env.package_path }}
+          format: spdx-json
+          output-file: "opendaq-${{ matrix.name }}.spdx.json"
+          upload-artifact: true
 
       - name: Upload package
         if: matrix.cpack != ''
